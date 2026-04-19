@@ -1,0 +1,23 @@
+{
+  "name": "ai_project_cursor",
+  "version": "1.0.0",
+  "description": "",
+  "main": "cucumber.js",
+  "scripts": {
+    "test": "cucumber-js",
+    "test:smoke": "cucumber-js --tags \"@smoke\"",
+    "test:login": "cucumber-js --tags \"@login\" --format progress --format html:reports/login-report.html --format json:reports/login-report.json",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@cucumber/cucumber": "^12.8.1",
+    "@types/node": "^25.6.0",
+    "dotenv": "^17.4.2",
+    "playwright": "^1.59.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^6.0.3"
+  }
+}
