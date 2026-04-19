@@ -5,3 +5,30 @@ reports/*.html
 reports/*.json
 playwright-report/
 .env.local
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# Test artifacts and reports
+reports/
+test-results/
+allure-results/
+allure-report/
+screenshots/
+videos/
+traces/
+
+# Logs and caches
+*.log
+*.tsbuildinfo
+coverage/
+.nyc_output/
+.cache/
+
+# OS/editor files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
