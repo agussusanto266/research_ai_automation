@@ -1,0 +1,48 @@
+Folder,Name,Preconditions,Step,Test Data,Expected Result,Priority,Type,Automatable
+Cart,EP - View cart with items,"Logged in as standard_user; 1 item added to cart",Navigate to /cart.html,standard_user / secret_sauce,Cart page loads successfully,High,Functional,Yes
+Cart,EP - View cart with items,,Verify cart contains 1 item,,Cart list displays exactly 1 item,High,Functional,Yes
+Cart,EP - View cart with items,,Verify item name is visible,,Product name text is displayed,High,Functional,Yes
+Cart,EP - View cart with items,,Verify item price is visible,,Product price text is displayed,High,Functional,Yes
+Cart,EP - View cart with items,,Verify Remove button is visible,,Remove button is present on the item row,High,Functional,Yes
+Cart,EP - View empty cart,"Logged in as standard_user; no items added to cart",Navigate to /cart.html,standard_user / secret_sauce,Cart page loads,Medium,Functional,Yes
+Cart,EP - View empty cart,,Verify no cart items displayed,,Cart list contains 0 items,Medium,Functional,Yes
+Cart,EP - View cart with all 6 products,"Logged in as standard_user; all 6 products added to cart",Navigate to /cart.html,standard_user / secret_sauce,Cart page loads,Medium,Functional,Yes
+Cart,EP - View cart with all 6 products,,Verify 6 items in cart list,,Cart list displays exactly 6 items,Medium,Functional,Yes
+Cart,BVA - Cart badge 0 items (no badge),"Logged in as standard_user; cart is empty",Navigate to cart page,standard_user / secret_sauce,Cart page loads,High,Functional,Yes
+Cart,BVA - Cart badge 0 items (no badge),,Verify cart badge is not visible,,Shopping cart badge element is NOT visible in header,High,Functional,Yes
+Cart,BVA - Cart badge 1 item (minimum),"Logged in as standard_user; exactly 1 item in cart",Navigate to cart page,standard_user / secret_sauce,Cart page loads,High,Functional,Yes
+Cart,BVA - Cart badge 1 item (minimum),,Verify cart badge shows 1,,Badge text content equals "1",High,Functional,Yes
+Cart,BVA - Cart badge 6 items (maximum),"Logged in as standard_user; all 6 products in cart",Navigate to cart page,standard_user / secret_sauce,Cart page loads,Medium,Functional,Yes
+Cart,BVA - Cart badge 6 items (maximum),,Verify cart badge shows 6,,Badge text content equals "6",Medium,Functional,Yes
+Cart,ST - Remove item from multi-item cart,"Logged in as standard_user; 2 items in cart",Navigate to /cart.html,standard_user / secret_sauce,Cart page loads with 2 items visible,High,Functional,Yes
+Cart,ST - Remove item from multi-item cart,,Click Remove button on the first cart item,,First item is removed from the cart list,High,Functional,Yes
+Cart,ST - Remove item from multi-item cart,,Verify cart item count is now 1,,Cart contains exactly 1 item,High,Functional,Yes
+Cart,ST - Remove item from multi-item cart,,Verify cart badge shows 1,,Shopping cart badge shows "1",High,Functional,Yes
+Cart,ST - Remove last item from cart,"Logged in as standard_user; exactly 1 item in cart",Navigate to /cart.html,standard_user / secret_sauce,Cart page loads with 1 item visible,High,Functional,Yes
+Cart,ST - Remove last item from cart,,Click Remove button on the cart item,,Item is removed from the cart,High,Functional,Yes
+Cart,ST - Remove last item from cart,,Verify cart is empty,,Cart list contains 0 items,High,Functional,Yes
+Cart,ST - Remove last item from cart,,Verify cart badge is hidden,,Shopping cart badge is NOT visible,High,Functional,Yes
+Cart,ST - Continue shopping from cart,"Logged in as standard_user; 1 item in cart",Navigate to /cart.html,standard_user / secret_sauce,Cart page loads,High,Functional,Yes
+Cart,ST - Continue shopping from cart,,Click Continue Shopping button,,Page navigates to /inventory.html,High,Functional,Yes
+Cart,ST - Continue shopping from cart,,Verify cart state is preserved,,Cart badge still shows "1" on inventory page,High,Functional,Yes
+Cart,ST - Proceed to checkout from cart,"Logged in as standard_user; 1 item in cart",Navigate to /cart.html,standard_user / secret_sauce,Cart page loads,High,Functional,Yes
+Cart,ST - Proceed to checkout from cart,,Click Checkout button,,Page navigates to /checkout-step-one.html,High,Functional,Yes
+Cart,DT - Checkout with empty cart (no validation),"Logged in as standard_user; cart is empty",Navigate to /cart.html,standard_user / secret_sauce,Cart page loads with empty cart,Medium,Functional,Yes
+Cart,DT - Checkout with empty cart (no validation),,Click Checkout button,,Page navigates to /checkout-step-one.html without validation error,Medium,Functional,Yes
+Cart,DT - Badge decrements immediately on remove,"Logged in as standard_user; 2 items in cart",Navigate to /cart.html,standard_user / secret_sauce,Cart page loads,High,Functional,Yes
+Cart,DT - Badge decrements immediately on remove,,Verify badge shows 2 before removal,,Cart badge text equals "2",High,Functional,Yes
+Cart,DT - Badge decrements immediately on remove,,Click Remove on the first item,,Item is removed from list,High,Functional,Yes
+Cart,DT - Badge decrements immediately on remove,,Verify badge immediately shows 1,,Cart badge text equals "1" without page reload,High,Functional,Yes
+Cart,EG - Unauthenticated direct URL access redirected,User is NOT logged in (fresh session with no cookies),Navigate directly to https://www.saucedemo.com/cart.html,,Redirected to login page (root URL /),High,Security,Yes
+Cart,EG - Unauthenticated direct URL access redirected,,Verify current URL is login page,,URL matches saucedemo.com root (login page),High,Security,Yes
+Cart,EG - Product name links to product detail page,"Logged in as standard_user; 1 item in cart",Navigate to /cart.html,standard_user / secret_sauce,Cart page loads,Medium,Functional,Yes
+Cart,EG - Product name links to product detail page,,Click on the product name hyperlink,,Page navigates to /inventory-item.html for that product,Medium,Functional,Yes
+Cart,EG - Product name links to product detail page,,Verify URL contains inventory-item.html,,Current URL contains inventory-item.html,Medium,Functional,Yes
+Cart,EG - Cart state persists after page refresh,"Logged in as standard_user; 1 item in cart",Navigate to /cart.html,standard_user / secret_sauce,Cart page loads with 1 item,Low,Functional,Yes
+Cart,EG - Cart state persists after page refresh,,Refresh the browser page,,Page reloads,Low,Functional,Yes
+Cart,EG - Cart state persists after page refresh,,Verify cart item still present after reload,,Cart still shows 1 item,Low,Functional,Yes
+Cart,EG - Remove all items sequentially until empty,"Logged in as standard_user; 3 items in cart",Navigate to /cart.html,standard_user / secret_sauce,Cart shows 3 items,Medium,Functional,Yes
+Cart,EG - Remove all items sequentially until empty,,Remove the first item,,Cart shows 2 items,Medium,Functional,Yes
+Cart,EG - Remove all items sequentially until empty,,Remove the next item,,Cart shows 1 item,Medium,Functional,Yes
+Cart,EG - Remove all items sequentially until empty,,Remove the last remaining item,,Cart is empty,Medium,Functional,Yes
+Cart,EG - Remove all items sequentially until empty,,Verify cart badge not visible,,No cart badge visible in header,Medium,Functional,Yes

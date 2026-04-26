@@ -1,8 +1,8 @@
 import { Given, Then } from "@cucumber/cucumber";
 import assert from "node:assert";
-import { HomePage } from "../pages/HomePage";
-import { env } from "../config/env";
-import { CustomWorld } from "../support/CustomWorld";
+import { HomePage } from "../../pages/HomePage";
+import { env } from "../../config/env";
+import { CustomWorld } from "../../support/CustomWorld";
 
 Given("I navigate to the base URL", async function (this: CustomWorld) {
   const homePage = new HomePage(this.page);

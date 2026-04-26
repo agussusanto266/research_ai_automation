@@ -6,7 +6,9 @@
   "scripts": {
     "test": "cucumber-js",
     "test:smoke": "cucumber-js --tags \"@smoke\"",
+    "test:regression": "cucumber-js --tags \"@regression\" --format progress --format html:reports/regression-report.html --format json:reports/regression-report.json",
     "test:login": "cucumber-js --tags \"@login\" --format progress --format html:reports/login-report.html --format json:reports/login-report.json",
+    "test:cart": "cucumber-js --tags \"@cart\" --format progress --format html:reports/cart-report.html --format json:reports/cart-report.json",
     "typecheck": "tsc --noEmit"
   },
   "keywords": [],

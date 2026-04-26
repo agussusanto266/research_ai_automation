@@ -2,12 +2,14 @@ import { setWorldConstructor, World } from "@cucumber/cucumber";
 import type { Browser, BrowserContext, Page } from "playwright";
 import { chromium } from "playwright";
 import type { LoginPage } from "../pages/LoginPage";
+import type { CartPage } from "../pages/CartPage";
 
 export class CustomWorld extends World {
   browser!: Browser;
   context!: BrowserContext;
   page!: Page;
   loginPage?: LoginPage;
+  cartPage?: CartPage;
   scenarioLogs: string[] = [];
   consoleLogs: string[] = [];
 

@@ -1,7 +1,7 @@
-import assert from "node:assert";
 import type { Page } from "playwright";
 import { BasePage } from "./BasePage";
-import { SelfHealingLocatorResolver, type LocatorCandidate } from "../utils/selfHealingLocator";
+import type { LocatorCandidate } from "../utils/selfHealingLocator";
+import assert from "node:assert";
 
 const USERNAME_CANDIDATES: LocatorCandidate[] = [
   { name: "primary-testid", kind: "testId", value: "username" },
@@ -28,11 +28,8 @@ const ERROR_CANDIDATES: LocatorCandidate[] = [
 ];
 
 export class LoginPage extends BasePage {
-  private readonly resolver: SelfHealingLocatorResolver;
-
   constructor(page: Page, scenarioLogs: string[]) {
-    super(page);
-    this.resolver = new SelfHealingLocatorResolver(page, scenarioLogs);
+    super(page, scenarioLogs);
   }
 
   async goto(baseUrl: string): Promise<void> {

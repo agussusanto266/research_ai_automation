@@ -1,0 +1,228 @@
+<h2 class="sr-only">CLAUDE.md flow diagram — two input paths (Path A and Path B) from PRD/web app to pre-release validation through Claude as AI agent</h2>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --pu-bg:#EEEDFE;--pu-bd:#534AB7;--pu-tx:#3C3489;--pu-s:#AFA9EC;
+  --te-bg:#E1F5EE;--te-bd:#0F6E56;--te-tx:#085041;
+}
+@media(prefers-color-scheme:dark){
+  :root{
+    --pu-bg:#26215C;--pu-bd:#AFA9EC;--pu-tx:#CECBF6;--pu-s:#7F77DD;
+    --te-bg:#04342C;--te-bd:#5DCAA5;--te-tx:#9FE1CB;
+  }
+}
+.f{padding:6px 0;font-size:13px}
+.box{border-radius:8px;padding:9px 13px;border-width:0.5px;border-style:solid;cursor:pointer;transition:opacity .15s}
+.box:hover{opacity:.82}
+.bg{background:var(--color-background-secondary);border-color:var(--color-border-secondary)}
+.bi{background:var(--color-background-info);border-color:var(--color-border-info)}
+.bw{background:var(--color-background-warning);border-color:var(--color-border-warning)}
+.bs{background:var(--color-background-success);border-color:var(--color-border-success)}
+.bp{background:var(--pu-bg);border-color:var(--pu-bd)}
+.bt{background:var(--te-bg);border-color:var(--te-bd)}
+.t1{font-size:13px;font-weight:500;color:var(--color-text-primary)}
+.bp .t1{color:var(--pu-tx)}
+.bt .t1{color:var(--te-tx)}
+.t2{font-size:11px;color:var(--color-text-secondary);margin-top:3px}
+.bp .t2{color:var(--pu-s)}
+.arr{text-align:center;font-size:13px;color:var(--color-text-tertiary);padding:3px 0;line-height:2}
+.row{display:flex;gap:10px}
+.col{flex:1;min-width:0;display:flex;flex-direction:column}
+.pl{font-size:10px;font-weight:500;letter-spacing:.6px;text-align:center;margin-bottom:5px;padding:3px 0;border-radius:4px}
+.pl-a{color:#0C447C;background:#E6F1FB}
+.pl-b{color:#633806;background:#FAEEDA}
+@media(prefers-color-scheme:dark){
+  .pl-a{color:#B5D4F4;background:#0C447C}
+  .pl-b{color:#FAC775;background:#633806}
+}
+.badge{display:inline-flex;align-items:center;padding:1px 7px;border-radius:10px;font-size:10px;font-weight:500;margin:2px 2px 0 0;white-space:nowrap}
+.bgs{margin-top:5px}
+.b1{background:#E6F1FB;color:#0C447C}
+.b2{background:#FAEEDA;color:#633806}
+.b3{background:#E1F5EE;color:#085041}
+.b4{background:#EEEDFE;color:#3C3489}
+.b5{background:#FAECE7;color:#712B13}
+.b6{background:#E6F1FB;color:#185FA5}
+.b7{background:#EAF3DE;color:#3B6D11}
+@media(prefers-color-scheme:dark){
+  .b1{background:#0C447C;color:#B5D4F4}
+  .b2{background:#633806;color:#FAC775}
+  .b3{background:#085041;color:#9FE1CB}
+  .b4{background:#26215C;color:#CECBF6}
+  .b5{background:#712B13;color:#F5C4B3}
+  .b6{background:#0C447C;color:#B5D4F4}
+  .b7{background:#27500A;color:#C0DD97}
+}
+.steps{margin:5px 0 0;padding-left:14px;list-style:decimal}
+.steps li{font-size:11px;color:var(--color-text-secondary);margin:2px 0;line-height:1.4}
+.verdict{display:flex;gap:6px;margin-top:6px}
+.vd{flex:1;padding:4px 7px;border-radius:5px;font-size:10px}
+.vd-ok{background:var(--color-background-success);color:var(--color-text-success)}
+.vd-no{background:var(--color-background-danger);color:var(--color-text-danger)}
+.vd .t3{font-size:10px;font-weight:500}
+.vd .t4{font-size:10px;color:var(--color-text-secondary);margin-top:1px}
+.arts{display:flex;gap:5px;margin-top:6px;flex-wrap:wrap}
+.art{flex:1;min-width:60px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:5px;padding:4px 6px;font-size:10px;color:var(--color-text-secondary);text-align:center;line-height:1.3}
+.dual{display:flex;gap:10px}
+.dual .col{flex:1}
+.leg{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;padding:8px 10px;border-radius:6px;border:0.5px solid var(--color-border-tertiary)}
+.li{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--color-text-secondary)}
+.lc{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+.sl{font-size:10px;color:var(--color-text-tertiary);text-align:center;letter-spacing:.4px;margin:3px 0 5px}
+.marr{display:flex;gap:10px}
+.divr{height:0.5px;background:var(--color-border-tertiary);margin:2px 0}
+</style>
+
+<div class="f">
+
+  <div class="sl">INPUT — choose your path</div>
+  <div class="box bg" onclick="sendPrompt('How do I decide whether to use Path A or Path B in CLAUDE.md?')">
+    <div class="t1" style="text-align:center">Is a PRD available?</div>
+    <div class="t2" style="text-align:center">Determine the path before starting</div>
+  </div>
+  <div class="arr">↓</div>
+
+  <div class="row">
+    <div class="col">
+      <div class="pl pl-a">PATH A — PRD available</div>
+      <div class="box bi" onclick="sendPrompt('What PRD format is easiest for Claude to analyze?')">
+        <div class="t1">PRD input</div>
+        <div class="t2">PDF / Word doc → paste to Claude</div>
+      </div>
+      <div class="arr">↓</div>
+      <div class="box bp" onclick="sendPrompt('Explain how Claude analyzes a PRD using SMART, INVEST, MoSCoW, RBT, and BVA/EP simultaneously')">
+        <div class="t1">Mode 1 — PRD analysis</div>
+        <div class="t2">Scoring across 5 frameworks at once</div>
+        <div class="bgs">
+          <span class="badge b6">SMART</span>
+          <span class="badge b4">INVEST</span>
+          <span class="badge b2">MoSCoW</span>
+          <span class="badge b5">RBT</span>
+          <span class="badge b7">BVA/EP</span>
+        </div>
+      </div>
+      <div class="arr">↓</div>
+      <div class="box bw" onclick="sendPrompt('What criteria does Claude use to determine whether a PRD is APPROVED or NEEDS REVISION?')">
+        <div class="t1">Verdict gate</div>
+        <div class="verdict">
+          <div class="vd vd-ok">
+            <div class="t3">APPROVED</div>
+            <div class="t4">Proceed to Mode 2</div>
+          </div>
+          <div class="vd vd-no">
+            <div class="t3">NEEDS REVISION</div>
+            <div class="t4">Feedback to team</div>
+          </div>
+        </div>
+      </div>
+      <div class="arr">↓</div>
+      <div class="box bp" onclick="sendPrompt('How does Claude apply EP, BVA, State Transition, Decision Table, and Error Guessing concretely when generating test cases from a PRD?')">
+        <div class="t1">Mode 2 — generate test cases</div>
+        <div class="t2">5 test design techniques (all required)</div>
+        <div class="bgs">
+          <span class="badge b1">EP</span>
+          <span class="badge b2">BVA</span>
+          <span class="badge b3">ST</span>
+          <span class="badge b4">DT</span>
+          <span class="badge b5">EG</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="pl pl-b">PATH B — no PRD</div>
+      <div class="box bw" onclick="sendPrompt('What should be prepared before running Mode 2B in Path B?')">
+        <div class="t1">Web app input</div>
+        <div class="t2">Feature name + target URL</div>
+      </div>
+      <div class="arr">↓</div>
+      <div class="box bp" onclick="sendPrompt('Explain each step of Mode 2B in detail: from reading existing files to generating all automation artifacts')">
+        <div class="t1">Mode 2B — explore + generate</div>
+        <div class="t2">Ordered steps, none skippable</div>
+        <ol class="steps">
+          <li>Read existing files</li>
+          <li>Navigate web app</li>
+          <li>Identify DOM locators</li>
+          <li>Design test cases (5 techniques)</li>
+          <li>Generate all artifacts</li>
+        </ol>
+        <div class="bgs">
+          <span class="badge b1">EP</span>
+          <span class="badge b2">BVA</span>
+          <span class="badge b3">ST</span>
+          <span class="badge b4">DT</span>
+          <span class="badge b5">EG</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="marr" style="margin-top:2px">
+    <div class="arr" style="flex:1">↓</div>
+    <div class="arr" style="flex:1">↓</div>
+  </div>
+
+  <div class="divr"></div>
+  <div class="sl" style="margin-top:4px">SHARED OUTPUT</div>
+
+  <div class="box bt" onclick="sendPrompt('Show me a complete Testmo CSV format example with all columns, including test case names that reflect EP/BVA/ST/DT/EG techniques')">
+    <div class="t1">Testmo CSV output</div>
+    <div class="t2">Folder · Name · Step · Test Data · Expected Result · Priority · Automatable</div>
+  </div>
+  <div class="arr">↓</div>
+
+  <div class="box bp" onclick="sendPrompt('What must Claude check in existing files before generating Mode 3 artifacts, and how should duplicate step definitions be avoided?')">
+    <div class="t1">Mode 3 — generate automation</div>
+    <div class="t2">Check existing files first</div>
+    <div class="arts">
+      <div class="art">*.feature<br>Gherkin</div>
+      <div class="art">*Page.ts<br>POM</div>
+      <div class="art">*.steps.ts<br>Step defs</div>
+    </div>
+  </div>
+  <div class="arr">↓</div>
+
+  <div class="box bt" style="border-width:1px" onclick="sendPrompt('Why is the Gherkin feature file the single source of truth, and how does it serve both manual testers and the Playwright runner at the same time?')">
+    <div class="t1" style="text-align:center;font-size:14px">Gherkin feature file — PIVOT</div>
+    <div class="t2" style="text-align:center">Single source of truth · @smoke + @regression tags</div>
+  </div>
+  <div class="arr">↓</div>
+
+  <div class="sl">DUAL TRACK — running in parallel</div>
+  <div class="dual">
+    <div class="col">
+      <div class="box bi" onclick="sendPrompt('How do you import Gherkin scenarios into Testmo as manual test cases using CSV?')">
+        <div class="t1">Manual track</div>
+        <div class="t2">Testmo CSV import</div>
+        <div class="t2" style="margin-top:2px">Manual tester follows steps</div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="box bw" onclick="sendPrompt('How does Playwright + Cucumber execute the step definitions generated by Claude from the Gherkin feature file?')">
+        <div class="t1">Automation track</div>
+        <div class="t2">Step defs + POM</div>
+        <div class="t2" style="margin-top:2px">Playwright runner</div>
+      </div>
+    </div>
+  </div>
+  <div class="arr">↓</div>
+
+  <div class="sl">PRE-RELEASE</div>
+  <div class="box bs" onclick="sendPrompt('What is the workload split at pre-release: what does automation handle versus what stays as manual exploratory testing?')">
+    <div class="t1" style="text-align:center">Pre-release validation</div>
+    <div class="t2" style="text-align:center">Auto regression · Manual exploratory · Report → Testmo</div>
+  </div>
+
+  <div class="leg" style="margin-top:10px">
+    <div class="li"><div class="lc" style="background:#EEEDFE;border:1px solid #534AB7"></div>Claude agent (Mode 1/2/2B/3)</div>
+    <div class="li"><div class="lc" style="background:#E1F5EE;border:1px solid #0F6E56"></div>Gherkin / CSV output</div>
+    <div class="li"><div class="lc" style="background:#E6F1FB;border:1px solid #185FA5"></div>Path A / Manual track</div>
+    <div class="li"><div class="lc" style="background:#FAEEDA;border:1px solid #854F0B"></div>Path B / Automation track</div>
+    <div class="li"><div class="lc" style="background:#EAF3DE;border:1px solid #3B6D11"></div>Pre-release / final output</div>
+    <div class="li"><span class="badge b1" style="margin:0">EP</span>Equivalence Partitioning</div>
+    <div class="li"><span class="badge b2" style="margin:0">BVA</span>Boundary Value Analysis</div>
+    <div class="li"><span class="badge b3" style="margin:0">ST</span>State Transition</div>
+    <div class="li"><span class="badge b4" style="margin:0">DT</span>Decision Table</div>
+    <div class="li"><span class="badge b5" style="margin:0">EG</span>Error Guessing</div>
+  </div>
+</div>

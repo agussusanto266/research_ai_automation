@@ -1,8 +1,8 @@
 import { Given, Then, When } from "@cucumber/cucumber";
 import assert from "node:assert";
-import { env } from "../config/env";
-import { LoginPage } from "../pages/LoginPage";
-import { CustomWorld } from "../support/CustomWorld";
+import { env } from "../../config/env";
+import { LoginPage } from "../../pages/LoginPage";
+import { CustomWorld } from "../../support/CustomWorld";
 
 Given("I open the SauceDemo login page", async function (this: CustomWorld) {
   this.loginPage = new LoginPage(this.page, this.scenarioLogs);

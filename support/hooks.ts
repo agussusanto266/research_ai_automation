@@ -15,6 +15,7 @@ Before(async function (this: CustomWorld) {
 
 AfterStep(async function (this: CustomWorld, { result }) {
   if (result?.status === Status.FAILED) {
+    await fs.mkdir("reports", { recursive: true });
     await this.page.screenshot({
       path: `reports/failed-${Date.now()}.png`,
       fullPage: true
