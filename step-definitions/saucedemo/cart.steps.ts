@@ -28,7 +28,7 @@ Given("I have {int} items in the cart", async function (this: CustomWorld, count
   await this.page.goto(`${env.baseUrl}/inventory.html`, { waitUntil: "domcontentloaded" });
   const addButtons = this.page.locator('[data-test^="add-to-cart"]');
   for (let i = 0; i < count; i++) {
-    await addButtons.nth(i).click();
+    await addButtons.first().click();
   }
 });
 
@@ -81,8 +81,7 @@ Then("the cart badge should show {string}", async function (this: CustomWorld, e
 });
 
 Then("the cart badge should not be visible", async function (this: CustomWorld) {
-  assert.ok(this.cartPage, "CartPage is not initialized");
-  const visible = await this.cartPage.isBadgeVisible();
+  const visible = await this.page.locator('[data-test="shopping-cart-badge"]').isVisible();
   assert.ok(!visible, "Expected cart badge to be hidden but it is visible");
 });
 

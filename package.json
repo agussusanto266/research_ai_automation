@@ -4,11 +4,14 @@
   "description": "",
   "main": "cucumber.js",
   "scripts": {
-    "test": "cucumber-js",
-    "test:smoke": "cucumber-js --tags \"@smoke\"",
-    "test:regression": "cucumber-js --tags \"@regression\" --format progress --format html:reports/regression-report.html --format json:reports/regression-report.json",
-    "test:login": "cucumber-js --tags \"@login\" --format progress --format html:reports/login-report.html --format json:reports/login-report.json",
-    "test:cart": "cucumber-js --tags \"@cart\" --format progress --format html:reports/cart-report.html --format json:reports/cart-report.json",
+    "test": "cucumber-js && open-cli reports/report.html",
+    "test:smoke": "cucumber-js --tags \"@smoke\" --format progress --format html:reports/smoke-report.html --format json:reports/smoke-report.json && open-cli reports/smoke-report.html",
+    "test:sanity": "cucumber-js --tags \"@sanity\" --format progress --format html:reports/sanity-report.html --format json:reports/sanity-report.json && open-cli reports/sanity-report.html",
+    "test:regression": "cucumber-js --tags \"@regression\" --format progress --format html:reports/regression-report.html --format json:reports/regression-report.json && open-cli reports/regression-report.html",
+    "test:login": "cucumber-js --tags \"@login\" --format progress --format html:reports/login-report.html --format json:reports/login-report.json && open-cli reports/login-report.html",
+    "test:cart": "cucumber-js --tags \"@cart\" --format progress --format html:reports/cart-report.html --format json:reports/cart-report.json && open-cli reports/cart-report.html",
+    "test:checkout-complete": "cucumber-js --tags \"@checkout-complete\" --format progress --format html:reports/checkout-complete-report.html --format json:reports/checkout-complete-report.json && open-cli reports/checkout-complete-report.html",
+    "test:product-detail": "cucumber-js --tags \"@product-detail\" --format progress --format html:reports/product-detail-report.html --format json:reports/product-detail-report.json && open-cli reports/product-detail-report.html",
     "typecheck": "tsc --noEmit"
   },
   "keywords": [],
@@ -19,6 +22,7 @@
     "@playwright/test": "^1.59.1",
     "@types/node": "^25.6.0",
     "dotenv": "^17.4.2",
+    "open-cli": "^9.0.0",
     "playwright": "^1.59.1",
     "ts-node": "^10.9.2",
     "typescript": "^6.0.3"

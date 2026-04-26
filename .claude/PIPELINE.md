@@ -62,6 +62,9 @@ Input (Path A / B / C)
   Gherkin → features/[app]/          (langsung production, review via git diff)
   POM     → pages/                   (langsung production, review via git diff)
   Steps   → step-definitions/[app]/  (langsung production, review via git diff)
+  package.json → script test:[feature] ditambahkan
+          ↓
+  Jalankan test → jika ada failure → debug & fix → ulangi sampai semua pass
 ```
 
 **Aturan:**
@@ -69,6 +72,7 @@ Input (Path A / B / C)
 - Gherkin, POM, dan step definitions di-generate langsung ke folder production per-app
 - Naming convention file: `[feature].feature`, `[PageName]Page.ts`, `[feature].steps.ts`
 - Review dilakukan via `git diff` sebelum commit
+- Pipeline **tidak selesai** sampai semua test pass — run, debug, dan fix adalah bagian wajib dari pipeline
 
 ---
 
@@ -189,6 +193,8 @@ Silakan revisi PRD dan jalankan ulang Mode 1.
 6. Generate Gherkin → `features/[app]/[feature].feature`
 7. Generate POM → `pages/[PageName]Page.ts`
 8. Generate step definitions → `step-definitions/[app]/[feature].steps.ts`
+9. Update `package.json` — tambahkan script `test:[feature]` dengan auto-open report
+10. **Jalankan Post-Generation Validation** — lihat seksi di bawah
 
 ---
 
@@ -204,11 +210,14 @@ Silakan revisi PRD dan jalankan ulang Mode 1.
 5. Generate Gherkin → `features/[app]/[feature].feature`
 6. Generate POM → `pages/[PageName]Page.ts`
 7. Generate step definitions → `step-definitions/[app]/[feature].steps.ts`
+8. Update `package.json` — tambahkan script `test:[feature]` dengan auto-open report
+9. **Jalankan Post-Generation Validation** — lihat seksi di bawah
 
 **Aturan:**
 - Tidak generate CSV baru — test cases sudah ada di input
 - Gherkin harus mencerminkan test cases asli — tidak menambah atau mengurangi coverage
 - Jika ada langkah CSV yang ambigu → tanyakan ke user sebelum generate
+- **Wajib tambahkan runner script ke `package.json`** setiap kali generate automation untuk fitur baru (format sama seperti Mode 3)
 
 ---
 
@@ -220,6 +229,8 @@ Silakan revisi PRD dan jalankan ulang Mode 1.
 1. `features/[app]/[feature].feature`
 2. `pages/[PageName]Page.ts`
 3. `step-definitions/[app]/[feature].steps.ts`
+4. `package.json` — tambahkan script runner baru (lihat aturan di bawah)
+5. **Jalankan Post-Generation Validation** — lihat seksi di bawah
 
 **Aturan:**
 - Cek `features/[app]/` dan `step-definitions/[app]/` — jangan duplikat step yang sudah defined
@@ -227,6 +238,49 @@ Silakan revisi PRD dan jalankan ulang Mode 1.
 - Gunakan `CustomWorld` dari `support/CustomWorld.ts` — tambah properti Page baru jika ada class baru
 - Test harus bisa jalan standalone
 - Tag `@smoke` untuk happy path, `@regression` untuk full suite
+- **Wajib tambahkan runner script ke `package.json`** setiap kali generate automation untuk fitur baru:
+  ```json
+  "test:[feature]": "cucumber-js --tags \"@[feature]\" --format progress --format html:reports/[feature]-report.html --format json:reports/[feature]-report.json && open-cli reports/[feature]-report.html"
+  ```
+  Ganti `[feature]` dengan nama feature dalam `kebab-case` (misal `checkout-complete`, `cart`, `login`).
+  Report auto-open menggunakan `open-cli` (sudah ter-install sebagai devDependency).
+
+---
+
+## Post-Generation Validation (Wajib — semua mode yang generate automation)
+
+> Berlaku setelah Mode 3, Mode 2B langkah 10, dan Mode 3C langkah 9.
+> Pipeline **tidak dinyatakan selesai** sampai semua test pass.
+
+**Langkah:**
+1. Jalankan test untuk fitur yang baru di-generate:
+   ```bash
+   npx cucumber-js --tags "@[feature]" --format progress
+   ```
+2. Evaluasi hasil:
+   - **Semua pass** → selesai, laporkan ke user
+   - **Ada failure / error** → lanjut ke langkah debug
+3. Debug failure — identifikasi root cause dari error message + stack trace:
+   | Gejala | Root cause umum | Fix |
+   |---|---|---|
+   | `Cannot read properties of undefined` | Page tidak diinisialisasi di step | Tambahkan inisialisasi di `Given` step |
+   | `locator.click: Element not found` | Locator candidates salah / stale | Update `LocatorCandidate[]` di POM |
+   | `Step not defined` | Step di Gherkin tidak ada implementasinya | Tambahkan step definition yang missing |
+   | TypeScript compile error | Type mismatch, import salah, missing property | Fix type error sebelum re-run |
+   | `Timeout` | Elemen lambat muncul atau navigasi belum selesai | Tambahkan locator candidate yang lebih stabil; jangan gunakan `waitForTimeout` |
+4. Perbaiki file yang relevan (POM, step definitions, atau Gherkin jika ada ambiguitas)
+5. Jalankan ulang test setelah fix — ulangi langkah 2–4 sampai semua pass
+6. Laporkan hasil akhir ke user:
+   - Jumlah scenario pass / fail
+   - Daftar fix yang dilakukan (jika ada)
+   - Perintah untuk membuka laporan: `npm run test:[feature]`
+
+**Aturan debug:**
+- Jangan ubah expected outcome test untuk menghindari failure — fix implementasinya, bukan assertion-nya
+- Jika locator tidak ditemukan → update `LocatorCandidate[]` di POM, jangan hardcode selector di step definition
+- Jika step undefined → tambahkan step definition, jangan modifikasi teks Gherkin
+- Jika TypeScript error → wajib fix sebelum run; `tsc --noEmit` bisa dipakai untuk cek cepat
+- Maksimal **3 iterasi debug** per failure — jika masih gagal setelah 3x, stop dan laporkan ke user dengan detail root cause dan langkah yang sudah dicoba
 
 ---
 

@@ -3,6 +3,8 @@ import type { Browser, BrowserContext, Page } from "playwright";
 import { chromium } from "playwright";
 import type { LoginPage } from "../pages/LoginPage";
 import type { CartPage } from "../pages/CartPage";
+import type { CheckoutCompletePage } from "../pages/CheckoutCompletePage";
+import type { ProductDetailPage } from "../pages/ProductDetailPage";
 
 export class CustomWorld extends World {
   browser!: Browser;
@@ -10,6 +12,8 @@ export class CustomWorld extends World {
   page!: Page;
   loginPage?: LoginPage;
   cartPage?: CartPage;
+  checkoutCompletePage?: CheckoutCompletePage;
+  productDetailPage?: ProductDetailPage;
   scenarioLogs: string[] = [];
   consoleLogs: string[] = [];
 

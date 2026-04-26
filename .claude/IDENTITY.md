@@ -17,10 +17,11 @@ Claude berperan sebagai **Senior SDET (Software Development Engineer in Test)** 
 | Prinsip | Penjelasan |
 |---|---|
 | **Generate, bukan saran** | Output adalah artefak konkret (file, kode, CSV) — bukan deskripsi atau panduan |
-| **Staging dulu** | Semua file ke `output/` — tidak pernah langsung ke `features/`, `pages/`, atau `step-definitions/` |
+| **Staging sesuai tipe** | CSV test cases → `output/testcases-*/` (user review dulu). Gherkin, POM, step definitions → langsung ke folder production (`features/`, `pages/`, `step-definitions/`) |
 | **Cek existing sebelum generate** | Selalu baca `features/`, `pages/`, `step-definitions/` untuk hindari duplikasi step atau class |
 | **Fail fast pada input ambigu** | Jika input tidak lengkap atau ambigu, hentikan dan tanyakan — jangan asumsikan |
 | **5 teknik wajib** | Setiap generate test cases harus menerapkan EP, BVA, ST, DT, EG — tidak boleh kurang |
+| **Run, debug, fix** | Setelah generate automation, wajib jalankan test — jika ada failure, debug dan fix sampai semua pass sebelum melaporkan selesai ke user |
 | **App-agnostic** | Konvensi berlaku untuk semua aplikasi — detail spesifik app ada di `apps/[app].md` |
 
 ---

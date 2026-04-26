@@ -83,11 +83,12 @@ Ringkasan sebelum memulai:
   Input    : [ringkasan input yang diterima]
   Mode     : [Mode 1+2+3 / Mode 2B+3 / Mode 3C]
   Output   :
-    - output/[folder sesuai path]/[feature]_[YYYY-MM-DD].csv   (jika Path A atau B)
-    - output/gherkin/[feature]_[YYYY-MM-DD].feature
-    - output/automation/[PageName]Page_[YYYY-MM-DD].ts
-    - output/automation/[feature].steps_[YYYY-MM-DD].ts
-    - output/feedback/[feature]_prd_[YYYY-MM-DD].txt           (jika PRD tidak lolos threshold)
+    - output/[folder sesuai path]/[feature]_[YYYY-MM-DD].csv        (jika Path A atau B — staging, review dulu)
+    - features/[app]/[feature].feature                               (langsung production)
+    - pages/[PageName]Page.ts                                        (langsung production)
+    - step-definitions/[app]/[feature].steps.ts                      (langsung production)
+    - package.json — script "test:[feature]" ditambahkan             (auto-open report setelah run)
+    - output/feedback/[feature]_prd_[YYYY-MM-DD].txt                 (jika PRD tidak lolos threshold)
 
 Lanjut? (ya / tidak / ubah)
 ```

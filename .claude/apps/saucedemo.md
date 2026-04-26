@@ -58,9 +58,13 @@ Login URL     : https://www.saucedemo.com  (login ada di halaman utama)
 
 ## Existing Automation Coverage
 
-| Fitur | Feature file | Status |
-|---|---|---|
-| Login | `features/login.feature` | automated |
+| Fitur | Feature file | Step definitions | POM |
+|---|---|---|---|
+| Healthcheck | `features/saucedemo/healthcheck.feature` | `step-definitions/saucedemo/healthcheck.steps.ts` | — |
+| Login | `features/saucedemo/login.feature` | `step-definitions/saucedemo/login.steps.ts` | `pages/LoginPage.ts` |
+| Cart | `features/saucedemo/cart.feature` | `step-definitions/saucedemo/cart.steps.ts` | `pages/CartPage.ts` |
+| Checkout Complete | `features/saucedemo/checkout-complete.feature` | `step-definitions/saucedemo/checkout-complete.steps.ts` | `pages/CheckoutCompletePage.ts` |
+| Product Detail | `features/saucedemo/product-detail.feature` | `step-definitions/saucedemo/product-detail.steps.ts` | `pages/ProductDetailPage.ts` |
 
 ---
 
