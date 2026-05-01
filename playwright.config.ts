@@ -7,7 +7,7 @@
 // Environment config is in config/env.ts.
 // Do not rely on this file for any test execution behaviour.
 // ============================================================
-import { defineConfig } from "@playwright/test";
+import { defineConfig } from "playwright/test";
 import dotenv from "dotenv";
 
 dotenv.config();
