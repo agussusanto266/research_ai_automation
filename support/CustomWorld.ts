@@ -6,6 +6,7 @@ import type { LoginPage } from "../pages/LoginPage";
 import type { CartPage } from "../pages/CartPage";
 import type { CheckoutCompletePage } from "../pages/CheckoutCompletePage";
 import type { ProductDetailPage } from "../pages/ProductDetailPage";
+import type { OrangeHRMLoginPage } from "../pages/OrangeHRMLoginPage";
 
 export class CustomWorld extends World {
   browser!: Browser;
@@ -15,6 +16,7 @@ export class CustomWorld extends World {
   cartPage?: CartPage;
   checkoutCompletePage?: CheckoutCompletePage;
   productDetailPage?: ProductDetailPage;
+  orangehrmLoginPage?: OrangeHRMLoginPage;
   scenarioLogs: string[] = [];
   consoleLogs: string[] = [];
 

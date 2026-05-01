@@ -18,6 +18,7 @@
     "support/**/*.ts",
     "pages/**/*.ts",
     "utils/**/*.ts",
-    "config/**/*.ts"
+    "config/**/*.ts",
+    "scripts/**/*.ts"
   ]
 }

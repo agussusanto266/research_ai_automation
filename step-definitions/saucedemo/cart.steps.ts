@@ -85,7 +85,7 @@ Then("the cart should display item name price and remove button", async function
   const price = await this.cartPage.getItemPriceAt(0);
   assert.ok(name.length > 0, "Expected item name to be visible but got empty string");
   assert.ok(price.length > 0, "Expected item price to be visible but got empty string");
-  const item = this.page.locator('[data-test="cart-item"]').first();
+  const item = this.page.locator('.cart_item').first();
   const removeBtn = item.getByRole("button", { name: "Remove" });
   assert.ok(await removeBtn.isVisible(), "Expected Remove button to be visible");
 });

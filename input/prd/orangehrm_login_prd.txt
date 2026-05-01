@@ -1,0 +1,136 @@
+PRD — Login Feature
+Product : OrangeHRM HR Management System
+Author  : QA Team
+Date    : 2026-05-01
+Version : 1.0
+
+================================================================================
+1. OVERVIEW
+================================================================================
+
+The Login feature is the entry point to OrangeHRM. It authenticates HR staff,
+managers, and administrators before granting access to any HR module.
+
+Scope: Web login form at /web/index.php/auth/login.
+Out of scope: SSO, OAuth2, mobile login.
+
+================================================================================
+2. USER STORIES (INVEST)
+================================================================================
+
+US-01 — Valid Login
+  As an HR staff member,
+  I want to enter my username and password and click Login,
+  So that I can access the HR modules I am authorised to use.
+  Acceptance criteria:
+    - Given valid credentials, the system redirects to /web/index.php/dashboard/index
+      within 3 seconds.
+    - The top navigation bar is visible after redirect.
+  Priority: Must Have
+  Estimated effort: 1 story point
+
+US-02 — Invalid Credentials
+  As a security-conscious administrator,
+  I want the system to reject incorrect credentials,
+  So that unauthorised users cannot access HR data.
+  Acceptance criteria:
+    - Given an invalid username or password, the form displays the message
+      "Invalid credentials" inline below the form fields.
+    - The password field is cleared on failure; the username field retains its value.
+    - The user remains on the login page; no redirect occurs.
+  Priority: Must Have
+  Estimated effort: 1 story point
+
+US-03 — Blank Field Validation
+  As an HR staff member,
+  I want the form to validate that both fields are filled before submission,
+  So that I receive immediate feedback when I forget to type my credentials.
+  Acceptance criteria:
+    - Submitting with an empty username shows "Required" below the username field.
+    - Submitting with an empty password shows "Required" below the password field.
+    - Submitting with both fields empty shows "Required" below both fields simultaneously.
+    - Validation fires on submit; no server call is made for blank submissions.
+  Priority: Must Have
+  Estimated effort: 0.5 story points
+
+US-04 — Forgotten Password
+  As an HR staff member who has forgotten their password,
+  I want a "Forgot your password?" link on the login page,
+  So that I can request a password reset email.
+  Acceptance criteria:
+    - A visible "Forgot your password?" link exists below the Login button.
+    - Clicking it navigates to /web/index.php/auth/requestPasswordResetCode.
+  Priority: Should Have
+  Estimated effort: 0.5 story points
+
+================================================================================
+3. MOSCOW PRIORITISATION
+================================================================================
+
+Must Have (launch blocker):
+  - US-01 Valid login and redirect
+  - US-02 Invalid credentials error message
+  - US-03 Blank field validation
+
+Should Have (important but not launch blocker):
+  - US-04 Forgotten password link
+
+Could Have:
+  - Remember me checkbox
+  - Login attempt rate limiting feedback message
+
+Won't Have (this release):
+  - Social login (Google, LinkedIn)
+  - Multi-factor authentication
+
+================================================================================
+4. INPUT FIELD DEFINITIONS (BVA / EP)
+================================================================================
+
+Username field
+  - Type     : text input, single line
+  - Min length: 1 character
+  - Max length: 255 characters
+  - Valid EP : any non-empty string that matches a registered username
+  - Invalid EP: empty string; string exceeding 255 characters; SQL injection payloads
+  - BVA values: length 0 (invalid), 1 (min valid), 2, 254, 255 (max valid), 256 (invalid)
+
+Password field
+  - Type     : password input, single line (masked)
+  - Min length: 1 character
+  - Max length: 64 characters
+  - Valid EP : any non-empty string that matches the stored hash for the given username
+  - Invalid EP: empty string; string exceeding 64 characters
+  - BVA values: length 0 (invalid), 1 (min valid), 2, 63, 64 (max valid), 65 (invalid)
+
+================================================================================
+5. RISK ASSESSMENT (RBT)
+================================================================================
+
+| Risk                                        | Likelihood | Impact | Mitigation                                      |
+|---------------------------------------------|-----------|--------|-------------------------------------------------|
+| Credential brute-force attack               | Low       | High   | Rate limiting handled by server (out of scope)  |
+| Session token not invalidated after logout  | Low       | High   | Covered by logout feature (separate PRD)        |
+| Error message leaks whether username exists | Medium    | Medium | Error message is generic ("Invalid credentials")|
+| Long input causes UI overflow               | Low       | Low    | Max-length enforced on input fields             |
+
+No High likelihood × High impact risks exist without mitigation.
+
+================================================================================
+6. NON-FUNCTIONAL REQUIREMENTS
+================================================================================
+
+- Login response time ≤ 3 seconds on a stable network (measured from button click
+  to dashboard render).
+- Login page must be accessible (WCAG 2.1 AA): all form fields have visible labels;
+  error messages are associated with their fields via aria-describedby.
+- Form must work on Chrome 120+, Firefox 120+, Edge 120+.
+
+================================================================================
+7. OUT OF SCOPE
+================================================================================
+
+- Session expiry and re-authentication
+- Password complexity rules (managed in Admin > Password Policy)
+- Audit log of login attempts
+================================================================================

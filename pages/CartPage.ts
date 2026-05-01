@@ -47,7 +47,7 @@ export class CartPage extends BasePage {
   }
 
   async getItemCount(): Promise<number> {
-    return this.page.locator('[data-test="cart-item"]').count();
+    return this.page.locator('.cart_item').count();
   }
 
   async isCartEmpty(): Promise<boolean> {
@@ -66,22 +66,22 @@ export class CartPage extends BasePage {
   }
 
   async getItemNameAt(index: number): Promise<string> {
-    const item = this.page.locator('[data-test="cart-item"]').nth(index);
+    const item = this.page.locator('.cart_item').nth(index);
     return (await item.locator('[data-test="inventory-item-name"]').textContent())?.trim() ?? "";
   }
 
   async getItemPriceAt(index: number): Promise<string> {
-    const item = this.page.locator('[data-test="cart-item"]').nth(index);
+    const item = this.page.locator('.cart_item').nth(index);
     return (await item.locator('[data-test="inventory-item-price"]').textContent())?.trim() ?? "";
   }
 
   async removeItemAt(index: number): Promise<void> {
-    const item = this.page.locator('[data-test="cart-item"]').nth(index);
+    const item = this.page.locator('.cart_item').nth(index);
     await item.getByRole("button", { name: "Remove" }).click();
   }
 
   async clickProductNameAt(index: number): Promise<void> {
-    const item = this.page.locator('[data-test="cart-item"]').nth(index);
+    const item = this.page.locator('.cart_item').nth(index);
     await item.locator('[data-test="inventory-item-name"]').click();
   }
 
