@@ -1,120 +1,120 @@
 # INTAKE.md — Pipeline Intake & Input Validation
 
-> Jalankan protokol ini SEBELUM eksekusi pipeline apapun.
-> Referensi app config: `.claude/apps/[app].md`
+> Run this protocol BEFORE executing any pipeline.
+> App config reference: `.claude/apps/[app].md`
 
 ---
 
-## Kapan Protokol Aktif vs Dilewati
+## When the Protocol Is Active vs Skipped
 
-**Aktif** — user memulai sesi tanpa menyebutkan path atau input secara eksplisit.
-Contoh trigger: *"mulai"*, *"generate test cases"*, *"bantu saya testing"*
+**Active** — user starts a session without explicitly specifying a path or inputs.
+Example triggers: *"start"*, *"generate test cases"*, *"help me with testing"*
 
-**Dilewati (skip step 1–2)** — user sudah memberikan path dan semua input wajib dalam satu pesan.
-Contoh: `"Mode 1 Path A: Analisis PRD berikut [...]"` → langsung ke step 3.
+**Skipped (skip steps 1–2)** — user has already provided the path and all required inputs in one message.
+Example: `"Mode 1 Path A: Analyze the following PRD [...]"` → go directly to step 3.
 
 ---
 
 ## Step 1 — Path Selection
 
-Tampilkan pilihan berikut:
+Display the following:
 
 ```
-Halo! Sebelum kita mulai, pilih jalur pipeline:
+Hello! Before we start, choose a pipeline path:
 
-  A — Path A (PRD)            Generate test cases dari PRD document
-  B — Path B (Exploratory)    Generate test cases dengan explore web app
-  C — Path C (Manual TC)      Otomasi test cases yang sudah dibuat manual
+  A — Path A (PRD)            Generate test cases from a PRD document
+  B — Path B (Exploratory)    Generate test cases by exploring the web app
+  C — Path C (Manual TC)      Automate manually created test cases
 
-Ketik A, B, atau C:
+Type A, B, or C:
 ```
 
 ---
 
 ## Step 2 — Input Validation per Path
 
-Validasi semua field berikut sebelum lanjut. Jika ada yang kosong → tanyakan satu per satu.
+Validate all fields below before continuing. If any are missing → ask one by one.
 
-> **Timing penting:** Segera setelah user menyebutkan **App target**, baca `.claude/apps/[app].md`
-> menggunakan Read tool. Credential dan quirks dari file tersebut digunakan untuk validasi step ini —
-> jangan tunggu sampai Step 3.
+> **Timing matters:** As soon as the user mentions the **target app**, read `.claude/apps/[app].md`
+> using the Read tool. Credentials and quirks from that file are used for validation in this step —
+> do not wait until Step 3.
 
 ### Path A — PRD
 
 | Input | Format | Status |
 |---|---|---|
-| App target | Nama app — segera load `.claude/apps/[app].md` | Wajib pertama |
-| PRD | File di `input/prd/[filename]` atau paste di chat | Wajib |
-| Nama fitur | String singkat — `login`, `checkout`, `cart` | Wajib |
+| Target app | App name — immediately load `.claude/apps/[app].md` | Required first |
+| PRD | File at `input/prd/[filename]` or pasted in chat | Required |
+| Feature name | Short string — `login`, `checkout`, `cart` | Required |
 
-> Jika PRD di-paste di chat → simpan ke `input/prd/[feature]_[YYYY-MM-DD].txt` sebelum lanjut.
+> If PRD is pasted in chat → save to `input/prd/[feature]_[YYYY-MM-DD].txt` before continuing.
 
 ### Path B — Exploratory
 
 | Input | Format | Status |
 |---|---|---|
-| App target | Nama app — segera load `.claude/apps/[app].md` | Wajib pertama |
-| URL target | URL lengkap halaman yang di-explore | Wajib |
-| Nama fitur | String singkat | Wajib |
-| Credential | username + password | Wajib jika auth diperlukan — ambil dari `apps/[app].md` jika tersedia |
+| Target app | App name — immediately load `.claude/apps/[app].md` | Required first |
+| Target URL | Full URL of the page to explore | Required |
+| Feature name | Short string | Required |
+| Credentials | username + password | Required if auth needed — pull from `apps/[app].md` if available |
 
 ### Path C — Manual Test Case
 
 | Input | Format | Status |
 |---|---|---|
-| App target | Nama app — segera load `.claude/apps/[app].md` | Wajib pertama |
-| Path file CSV | `input/testcases/[filename].csv` | Wajib — file harus sudah ada |
-| URL target | URL halaman yang di-cover test cases tersebut | Wajib — untuk identifikasi locators |
+| Target app | App name — immediately load `.claude/apps/[app].md` | Required first |
+| CSV file path | `input/testcases/[filename].csv` | Required — file must already exist |
+| Target URL | URL of the page covered by these test cases | Required — for locator identification |
 
-> Jika file CSV belum ada di `input/testcases/` → minta user upload dulu, jangan lanjut.
+> If CSV file does not yet exist in `input/testcases/` → ask the user to upload it first, do not continue.
 
 ---
 
 ## Step 3 — Confirmation Gate
 
-Setelah semua input terkumpul, tampilkan summary berikut sebelum eksekusi:
+Once all inputs are collected, display the following summary before executing:
 
 ```
-Ringkasan sebelum memulai:
+Summary before starting:
 
-  Jalur    : [A / B / C]
-  App      : [nama app]
-  Fitur    : [nama fitur]
-  Input    : [ringkasan input yang diterima]
+  Path     : [A / B / C]
+  App      : [app name]
+  Feature  : [feature name]
+  Input    : [summary of received inputs]
   Mode     : [Mode 1+2+3 / Mode 2B+3 / Mode 3C]
   Output   :
-    - output/[folder sesuai path]/[feature]_[YYYY-MM-DD].csv        (jika Path A atau B — staging, review dulu)
-    - features/[app]/[feature].feature                               (langsung production)
-    - pages/[PageName]Page.ts                                        (langsung production)
-    - step-definitions/[app]/[feature].steps.ts                      (langsung production)
-    - package.json — script "test:[feature]" ditambahkan             (auto-open report setelah run)
-    - output/feedback/[feature]_prd_[YYYY-MM-DD].txt                 (jika PRD tidak lolos threshold)
+    - output/[folder per path]/[feature]_[YYYY-MM-DD].csv        (Path A or B only — staging, review first)
+    - features/[app]/[feature].feature                            (direct to production)
+    - pages/[PageName]Page.ts                                     (direct to production)
+    - step-definitions/[app]/[feature].steps.ts                   (direct to production)
+    - package.json — script "test:[feature]" added                (auto-opens report after run)
+    - output/feedback/[feature]_prd_[YYYY-MM-DD].txt              (if PRD does not pass threshold)
 
-Lanjut? (ya / tidak / ubah)
+Proceed? (yes / no / change)
 ```
 
-| Jawaban | Tindakan |
+| Answer | Action |
 |---|---|
-| `ya` | Eksekusi pipeline sesuai `PIPELINE.md` (apps/[app].md sudah dibaca di Step 2) |
-| `tidak` | Hentikan, tanyakan apa yang ingin diubah |
-| `ubah` | Kembali ke step yang relevan |
+| `yes` | Execute pipeline per `PIPELINE.md` (apps/[app].md already read in Step 2) |
+| `no` | Stop, ask what the user wants to change |
+| `change` | Return to the relevant step |
 
 ---
 
-## Alur Ringkas
+## Quick Flow
 
 ```
-User memulai sesi
+User starts session
       ↓
-Path + input sudah lengkap?
-  ├── Ya  → Step 3 (confirmation) → eksekusi
-  └── Tidak
+Path + inputs already complete?
+  ├── Yes → Step 3 (confirmation) → execute
+  └── No
         ↓
-  Step 1: Pilih path (A / B / C)
+  Step 1: Choose path (A / B / C)
         ↓
-  Step 2: Validasi input wajib per path
+  Step 2: Validate required inputs per path
         ↓
-  Step 3: Summary + konfirmasi
+  Step 3: Summary + confirmation
         ↓
-  Eksekusi PIPELINE.md
+  Execute PIPELINE.md
 ```

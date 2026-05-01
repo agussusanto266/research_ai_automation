@@ -4,30 +4,30 @@ AI-driven QA automation pipeline — Playwright + Cucumber.js + TypeScript.
 
 ---
 
-> ## ⚠️ TINDAKAN PERTAMA WAJIB
+> ## ⚠️ REQUIRED FIRST ACTION
 >
-> Baca `.claude/MANIFEST.md` menggunakan Read tool **sebelum melakukan apapun**.
+> Read `.claude/MANIFEST.md` using the Read tool **before doing anything**.
 >
-> Jangan mulai pipeline, generate file, atau menjawab pertanyaan teknis
-> sebelum MANIFEST dan file-file yang dirujuknya selesai dibaca.
+> Do not start the pipeline, generate files, or answer technical questions
+> until MANIFEST and all files it references have been fully read.
 
 ---
 
-## Struktur Instruksi
+## Instruction Structure
 
 ```
 .claude/
-├── MANIFEST.md       ← baca pertama — index + reading order
-├── IDENTITY.md       ← peran dan prinsip kerja Claude
+├── MANIFEST.md       ← read first — index + reading order
+├── IDENTITY.md       ← Claude's role and working principles
 ├── INTAKE.md         ← intake flow + input validation
 ├── CONVENTIONS.md    ← coding standards, locator, naming
-├── PIPELINE.md       ← 3 path, modes, output format
+├── PIPELINE.md       ← 3 paths, modes, output format
 └── apps/
-    ├── _TEMPLATE.md  ← template untuk app baru
-    └── saucedemo.md  ← config SauceDemo
+    ├── _TEMPLATE.md  ← template for new apps
+    └── saucedemo.md  ← SauceDemo config
 ```
 
-## Struktur Folder Project
+## Project Folder Structure
 
 ```
 input/
@@ -37,9 +37,9 @@ input/
 output/
 ├── testcases-from-prd/
 ├── testcases-from-webexploratory/
-├── gherkin/          ← staging feature files
-├── automation/       ← staging POM + step defs
-└── feedback/         ← PRD feedback jika di bawah threshold
+├── gherkin/          ← staging feature files (unused by current pipeline)
+├── automation/       ← staging POM + step definitions (unused by current pipeline)
+└── feedback/         ← PRD feedback if below threshold
 
 features/             ← PRODUCTION
 pages/                ← PRODUCTION

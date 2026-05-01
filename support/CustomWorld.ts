@@ -1,6 +1,7 @@
 import { setWorldConstructor, World } from "@cucumber/cucumber";
 import type { Browser, BrowserContext, Page } from "playwright";
 import { chromium } from "playwright";
+import { env } from "../config/env";
 import type { LoginPage } from "../pages/LoginPage";
 import type { CartPage } from "../pages/CartPage";
 import type { CheckoutCompletePage } from "../pages/CheckoutCompletePage";
@@ -18,7 +19,7 @@ export class CustomWorld extends World {
   consoleLogs: string[] = [];
 
   async initBrowser(): Promise<void> {
-    this.browser = await chromium.launch({ headless: process.env.HEADLESS === "true" });
+    this.browser = await chromium.launch({ headless: env.headless });
   }
 }
 

@@ -31,7 +31,14 @@ export class CartPage extends BasePage {
   }
 
   async goto(baseUrl: string): Promise<void> {
-    await this.page.goto(`${baseUrl}/cart.html`, { waitUntil: "domcontentloaded" });
+    const cartLink = this.page.locator('[data-test="shopping-cart-link"]');
+    if (await cartLink.isVisible()) {
+      await cartLink.click();
+      await this.page.waitForURL(/\/cart\.html/);
+      await this.page.locator('[data-test="title"]').waitFor({ state: "visible" });
+    } else {
+      await this.page.goto(`${baseUrl}cart.html`, { waitUntil: "domcontentloaded" });
+    }
   }
 
   async getTitle(): Promise<string> {

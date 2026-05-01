@@ -2,33 +2,16 @@ import { Given, When, Then } from "@cucumber/cucumber";
 import assert from "node:assert";
 import { env } from "../../config/env";
 import { CartPage } from "../../pages/CartPage";
-import { LoginPage } from "../../pages/LoginPage";
 import { CustomWorld } from "../../support/CustomWorld";
-
-const TEST_PASSWORDS: Record<string, string> = {
-  standard_user: "secret_sauce",
-  locked_out_user: "secret_sauce",
-  problem_user: "secret_sauce",
-  performance_glitch_user: "secret_sauce"
-};
-
-Given("I am logged in as {string}", async function (this: CustomWorld, username: string) {
-  const loginPage = new LoginPage(this.page, this.scenarioLogs);
-  await loginPage.goto(env.baseUrl);
-  await loginPage.login(username, TEST_PASSWORDS[username] ?? "secret_sauce");
-  assert.match(this.page.url(), /inventory\.html/, `Login failed for user: ${username}`);
-});
-
-Given("I am not logged in", async function (this: CustomWorld) {
-  // Fresh browser context is created per scenario by the Before hook — no action needed
-});
 
 Given("I have {int} items in the cart", async function (this: CustomWorld, count: number) {
   if (count === 0) return;
-  await this.page.goto(`${env.baseUrl}/inventory.html`, { waitUntil: "domcontentloaded" });
-  const addButtons = this.page.locator('[data-test^="add-to-cart"]');
+  await this.page.goto(`${env.baseUrl}inventory.html`, { waitUntil: "load" });
   for (let i = 0; i < count; i++) {
-    await addButtons.first().click();
+    await this.page.locator('[data-test^="add-to-cart"]').first().click();
+    await this.page.locator('[data-test="shopping-cart-badge"]')
+      .filter({ hasText: String(i + 1) })
+      .waitFor({ state: "visible" });
   }
 });
 

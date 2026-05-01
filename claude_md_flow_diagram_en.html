@@ -1,4 +1,4 @@
-<h2 class="sr-only">CLAUDE.md flow diagram — two input paths (Path A and Path B) from PRD/web app to pre-release validation through Claude as AI agent</h2>
+<h2 class="sr-only">CLAUDE.md flow diagram — three input paths (Path A, Path B, Path C) from PRD/web app/manual CSV to pre-release validation through Claude as AI agent</h2>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -31,9 +31,11 @@
 .pl{font-size:10px;font-weight:500;letter-spacing:.6px;text-align:center;margin-bottom:5px;padding:3px 0;border-radius:4px}
 .pl-a{color:#0C447C;background:#E6F1FB}
 .pl-b{color:#633806;background:#FAEEDA}
+.pl-c{color:#3B6D11;background:#EAF3DE}
 @media(prefers-color-scheme:dark){
   .pl-a{color:#B5D4F4;background:#0C447C}
   .pl-b{color:#FAC775;background:#633806}
+  .pl-c{color:#C0DD97;background:#27500A}
 }
 .badge{display:inline-flex;align-items:center;padding:1px 7px;border-radius:10px;font-size:10px;font-weight:500;margin:2px 2px 0 0;white-space:nowrap}
 .bgs{margin-top:5px}
@@ -62,7 +64,7 @@
 .vd .t3{font-size:10px;font-weight:500}
 .vd .t4{font-size:10px;color:var(--color-text-secondary);margin-top:1px}
 .arts{display:flex;gap:5px;margin-top:6px;flex-wrap:wrap}
-.art{flex:1;min-width:60px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:5px;padding:4px 6px;font-size:10px;color:var(--color-text-secondary);text-align:center;line-height:1.3}
+.art{flex:1;min-width:55px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:5px;padding:4px 6px;font-size:10px;color:var(--color-text-secondary);text-align:center;line-height:1.3}
 .dual{display:flex;gap:10px}
 .dual .col{flex:1}
 .leg{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;padding:8px 10px;border-radius:6px;border:0.5px solid var(--color-border-tertiary)}
@@ -76,9 +78,9 @@
 <div class="f">
 
   <div class="sl">INPUT — choose your path</div>
-  <div class="box bg" onclick="sendPrompt('How do I decide whether to use Path A or Path B in CLAUDE.md?')">
-    <div class="t1" style="text-align:center">Is a PRD available?</div>
-    <div class="t2" style="text-align:center">Determine the path before starting</div>
+  <div class="box bg" onclick="sendPrompt('How do I decide which pipeline path to use — Path A, B, or C?')">
+    <div class="t1" style="text-align:center">Choose your pipeline path</div>
+    <div class="t2" style="text-align:center">Three paths — choose based on what you have</div>
   </div>
   <div class="arr">↓</div>
 
@@ -141,10 +143,12 @@
         <div class="t2">Ordered steps, none skippable</div>
         <ol class="steps">
           <li>Read existing files</li>
-          <li>Navigate web app</li>
-          <li>Identify DOM locators</li>
+          <li>Navigate web app + DOM inspection</li>
           <li>Design test cases (5 techniques)</li>
-          <li>Generate all artifacts</li>
+          <li>Generate CSV → output/ (staging)</li>
+          <li>Generate Gherkin + POM + steps</li>
+          <li>Update package.json runner script</li>
+          <li>Post-Generation Validation</li>
         </ol>
         <div class="bgs">
           <span class="badge b1">EP</span>
@@ -155,9 +159,33 @@
         </div>
       </div>
     </div>
+
+    <div class="col">
+      <div class="pl pl-c">PATH C — manual test cases</div>
+      <div class="box bs" onclick="sendPrompt('What format is required for the input CSV in Path C (Mode 3C)?')">
+        <div class="t1">Manual test case CSV</div>
+        <div class="t2">input/testcases/[feature].csv</div>
+        <div class="t2" style="margin-top:2px">File must exist before starting</div>
+      </div>
+      <div class="arr">↓</div>
+      <div class="box bp" onclick="sendPrompt('Explain Mode 3C: how does Claude generate automation artifacts directly from a manual test case CSV without a test design step?')">
+        <div class="t1">Mode 3C — generate automation</div>
+        <div class="t2">CSV → Gherkin + POM + steps (no test design step)</div>
+        <ol class="steps">
+          <li>Read input CSV</li>
+          <li>Read existing files</li>
+          <li>Map test cases → Gherkin</li>
+          <li>Identify locators (web exploration)</li>
+          <li>Generate Gherkin + POM + steps</li>
+          <li>Update package.json runner script</li>
+          <li>Post-Generation Validation</li>
+        </ol>
+      </div>
+    </div>
   </div>
 
   <div class="marr" style="margin-top:2px">
+    <div class="arr" style="flex:1">↓</div>
     <div class="arr" style="flex:1">↓</div>
     <div class="arr" style="flex:1">↓</div>
   </div>
@@ -168,16 +196,28 @@
   <div class="box bt" onclick="sendPrompt('Show me a complete Testmo CSV format example with all columns, including test case names that reflect EP/BVA/ST/DT/EG techniques')">
     <div class="t1">Testmo CSV output</div>
     <div class="t2">Folder · Name · Step · Test Data · Expected Result · Priority · Automatable</div>
+    <div class="t2" style="margin-top:2px">Staged to output/testcases-*/ — user reviews before automation</div>
   </div>
   <div class="arr">↓</div>
 
   <div class="box bp" onclick="sendPrompt('What must Claude check in existing files before generating Mode 3 artifacts, and how should duplicate step definitions be avoided?')">
     <div class="t1">Mode 3 — generate automation</div>
-    <div class="t2">Check existing files first</div>
+    <div class="t2">Check existing files first — no duplicate steps</div>
     <div class="arts">
       <div class="art">*.feature<br>Gherkin</div>
       <div class="art">*Page.ts<br>POM</div>
       <div class="art">*.steps.ts<br>Step defs</div>
+      <div class="art">package.json<br>runner script</div>
+    </div>
+  </div>
+  <div class="arr">↓</div>
+
+  <div class="box bw" onclick="sendPrompt('Explain the Post-Generation Validation loop: how does Claude run, debug, and fix failing tests after generating automation?')">
+    <div class="t1">Post-Generation Validation</div>
+    <div class="t2">Run → evaluate → debug → fix → re-run (max 3 iterations per failure)</div>
+    <div class="bgs">
+      <span class="badge b7">all pass → report done</span>
+      <span class="badge b5">failure → debug &amp; fix</span>
     </div>
   </div>
   <div class="arr">↓</div>
@@ -214,11 +254,11 @@
   </div>
 
   <div class="leg" style="margin-top:10px">
-    <div class="li"><div class="lc" style="background:#EEEDFE;border:1px solid #534AB7"></div>Claude agent (Mode 1/2/2B/3)</div>
+    <div class="li"><div class="lc" style="background:#EEEDFE;border:1px solid #534AB7"></div>Claude agent (Mode 1/2/2B/3/3C)</div>
     <div class="li"><div class="lc" style="background:#E1F5EE;border:1px solid #0F6E56"></div>Gherkin / CSV output</div>
     <div class="li"><div class="lc" style="background:#E6F1FB;border:1px solid #185FA5"></div>Path A / Manual track</div>
     <div class="li"><div class="lc" style="background:#FAEEDA;border:1px solid #854F0B"></div>Path B / Automation track</div>
-    <div class="li"><div class="lc" style="background:#EAF3DE;border:1px solid #3B6D11"></div>Pre-release / final output</div>
+    <div class="li"><div class="lc" style="background:#EAF3DE;border:1px solid #3B6D11"></div>Path C / Pre-release / final output</div>
     <div class="li"><span class="badge b1" style="margin:0">EP</span>Equivalence Partitioning</div>
     <div class="li"><span class="badge b2" style="margin:0">BVA</span>Boundary Value Analysis</div>
     <div class="li"><span class="badge b3" style="margin:0">ST</span>State Transition</div>

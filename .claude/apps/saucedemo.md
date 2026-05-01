@@ -8,7 +8,7 @@
 App Name    : saucedemo
 Display Name: SauceDemo
 Base URL    : https://www.saucedemo.com
-Environment : production (demo app — tidak ada staging)
+Environment : production (demo app — no staging environment)
 ```
 
 ---
@@ -18,47 +18,47 @@ Environment : production (demo app — tidak ada staging)
 ```
 Auth Required : yes
 Auth Type     : form-login
-Login URL     : https://www.saucedemo.com  (login ada di halaman utama)
+Login URL     : https://www.saucedemo.com  (login is on the home page)
 ```
 
 ### Test Accounts
 
-| Role | Username | Password | Keterangan |
+| Role | Username | Password | Notes |
 |---|---|---|---|
-| standard | standard_user | secret_sauce | Happy path — gunakan untuk semua positive test |
-| locked | locked_out_user | secret_sauce | Locked — untuk negative case login |
-| problem | problem_user | secret_sauce | Valid tapi UI buggy — untuk edge case visual |
-| glitch | performance_glitch_user | secret_sauce | Valid tapi response lambat — untuk timing sensitivity |
+| standard | standard_user | secret_sauce | Happy path — use for all positive tests |
+| locked | locked_out_user | secret_sauce | Locked — use for negative login cases |
+| problem | problem_user | secret_sauce | Valid but buggy UI — use for visual edge cases only |
+| glitch | performance_glitch_user | secret_sauce | Valid but slow responses — avoid for timing-sensitive tests |
 
 ---
 
 ## Pages / Modules
 
-| Nama halaman | URL path | Keterangan |
+| Page name | URL path | Notes |
 |---|---|---|
-| Login | `/` | Form login username + password |
-| Inventory | `/inventory.html` | Daftar produk, sort, filter |
-| Product Detail | `/inventory-item.html?id=[n]` | Detail produk, add to cart |
-| Cart | `/cart.html` | Review item sebelum checkout |
-| Checkout Step 1 | `/checkout-step-one.html` | Input info pembeli |
+| Login | `/` | Username + password login form |
+| Inventory | `/inventory.html` | Product list with sort and filter |
+| Product Detail | `/inventory-item.html?id=[n]` | Product detail, add to cart |
+| Cart | `/cart.html` | Review items before checkout |
+| Checkout Step 1 | `/checkout-step-one.html` | Enter buyer information |
 | Checkout Step 2 | `/checkout-step-two.html` | Review order + total |
-| Checkout Complete | `/checkout-complete.html` | Konfirmasi order sukses |
+| Checkout Complete | `/checkout-complete.html` | Order success confirmation |
 
 ---
 
 ## Known Quirks & Limitations
 
-- `problem_user` menampilkan gambar produk yang salah dan beberapa tombol tidak berfungsi — gunakan hanya untuk edge case visual, bukan happy path
-- `performance_glitch_user` memiliki delay 1–5 detik pada setiap action — jangan gunakan untuk timing-sensitive test
-- Tidak ada backend nyata — semua state hanya di session, refresh akan reset cart
-- Tidak ada fitur search — filter hanya tersedia via dropdown sort
-- `data-test` attribute tersedia di hampir semua elemen interaktif — prioritaskan `getByTestId()`
+- `problem_user` displays wrong product images and some buttons do not work — use only for visual edge cases, not happy path
+- `performance_glitch_user` has a 1–5 second delay on every action — do not use for timing-sensitive tests
+- No real backend — all state is session-only, refreshing will reset the cart
+- No search feature — filtering is only available via the sort dropdown
+- `data-test` attributes are available on almost all interactive elements — prioritize `getByTestId()`
 
 ---
 
 ## Existing Automation Coverage
 
-| Fitur | Feature file | Step definitions | POM |
+| Feature | Feature file | Step definitions | POM |
 |---|---|---|---|
 | Healthcheck | `features/saucedemo/healthcheck.feature` | `step-definitions/saucedemo/healthcheck.steps.ts` | — |
 | Login | `features/saucedemo/login.feature` | `step-definitions/saucedemo/login.steps.ts` | `pages/LoginPage.ts` |
@@ -70,6 +70,6 @@ Login URL     : https://www.saucedemo.com  (login ada di halaman utama)
 
 ## Changelog
 
-| Tanggal | Perubahan |
+| Date | Change |
 |---|---|
-| 2026-04-26 | Initial config — migrasi dari CLAUDE.md |
+| 2026-04-26 | Initial config — migrated from CLAUDE.md |

@@ -1,55 +1,55 @@
 # MANIFEST.md — Project Index & Reading Order
 
-> Entry point untuk semua file instruksi project ini.
-> Baca file ini setelah CLAUDE.md, lalu ikuti reading order di bawah.
+> Entry point for all project instruction files.
+> Read this file after CLAUDE.md, then follow the reading order below.
 
 ---
 
 ## File Index
 
-| File | Tujuan | Frekuensi berubah |
+| File | Purpose | Change frequency |
 |---|---|---|
-| `.claude/IDENTITY.md` | Peran, prinsip kerja, dan tone Claude | Jarang |
-| `.claude/INTAKE.md` | Intake flow, input validation, confirmation gate | Sedang |
-| `.claude/CONVENTIONS.md` | Coding standards, locator strategy, naming | Jarang |
-| `.claude/PIPELINE.md` | 3 path, modes, output format, staging workflow | Sedang |
-| `.claude/apps/_TEMPLATE.md` | Template untuk mendaftarkan app baru | Jarang |
-| `.claude/apps/[app].md` | Config spesifik per aplikasi (URL, users, quirks) | Per project |
+| `.claude/IDENTITY.md` | Claude's role, working principles, and tone | Rarely |
+| `.claude/INTAKE.md` | Intake flow, input validation, confirmation gate | Occasionally |
+| `.claude/CONVENTIONS.md` | Coding standards, locator strategy, naming | Rarely |
+| `.claude/PIPELINE.md` | 3 paths, modes, output format, staging workflow | Occasionally |
+| `.claude/apps/_TEMPLATE.md` | Template for registering a new app | Rarely |
+| `.claude/apps/[app].md` | App-specific config (URL, users, quirks) | Per project |
 
 ---
 
 ## Default Reading Order
 
-Ikuti urutan ini di setiap sesi baru:
+Follow this order at the start of every new session:
 
 ```
-1. MANIFEST.md      (ini)           — orientasi
-2. IDENTITY.md                      — internalisasi peran
-3. INTAKE.md                        — jalankan intake, tentukan path
-4. apps/[app].md                    — load context app target
-5. CONVENTIONS.md + PIPELINE.md     — saat siap eksekusi
+1. MANIFEST.md      (this file)     — orientation
+2. IDENTITY.md                      — internalize the role
+3. INTAKE.md                        — run intake, determine path
+4. apps/[app].md                    — load target app context
+5. CONVENTIONS.md + PIPELINE.md     — when ready to execute
 ```
 
 ---
 
 ## Conditional Loading
 
-| Kondisi | Tindakan |
+| Condition | Action |
 |---|---|
-| User menyebut app yang belum ada di `apps/` | Baca `apps/_TEMPLATE.md`, minta user isi field yang dibutuhkan |
-| User sudah menyebutkan path + semua input lengkap | Skip INTAKE step 1–2, langsung step 3 (confirmation) |
-| Path C — Manual Test Case | Baca file CSV di `input/testcases/` sebagai bagian context loading |
-| Generate kode (POM, steps, Gherkin) | Wajib baca `CONVENTIONS.md` sebelum mulai |
-| Menjalankan pipeline mode apapun | Wajib baca `PIPELINE.md` sebelum mulai |
+| User mentions an app not yet in `apps/` | Read `apps/_TEMPLATE.md`, ask user to fill in required fields |
+| User has already specified path + all required inputs | Skip INTAKE steps 1–2, go directly to step 3 (confirmation) |
+| Path C — Manual Test Case | Read the CSV file in `input/testcases/` as part of context loading |
+| Generating code (POM, steps, Gherkin) | Must read `CONVENTIONS.md` before starting |
+| Running any pipeline mode | Must read `PIPELINE.md` before starting |
 
 ---
 
-## Owner per File
+## File Owners
 
-| File | Owner yang disarankan |
+| File | Suggested owner |
 |---|---|
 | `IDENTITY.md` | QA Lead / Automation Architect |
 | `INTAKE.md` | QA Lead |
 | `CONVENTIONS.md` | Senior QA Engineer |
 | `PIPELINE.md` | QA Lead |
-| `apps/[app].md` | QA Engineer yang assign ke app tersebut |
+| `apps/[app].md` | QA Engineer assigned to that app |

@@ -1,6 +1,6 @@
 # research_ai_automation
 
-AI-driven QA automation pipeline — generate test cases dan automation scripts menggunakan Claude sebagai agent.
+AI-driven QA automation pipeline — generates test cases and automation scripts using Claude as the agent.
 
 **Stack:** TypeScript · Playwright · Cucumber.js · Page Object Model · Self-healing locators · Testmo
 
@@ -12,7 +12,7 @@ AI-driven QA automation pipeline — generate test cases dan automation scripts 
 npm install
 ```
 
-Buat file `.env` di root project:
+Create a `.env` file in the project root:
 ```env
 BASE_URL=https://www.saucedemo.com/
 HEADLESS=true
@@ -20,75 +20,75 @@ HEADLESS=true
 
 ---
 
-## Menjalankan Test yang Sudah Ada
+## Running Existing Tests
 
 ```bash
-npm test              # semua test
-npm run test:smoke    # smoke test saja (happy path)
-npm run test:login    # login suite saja
-npm run typecheck     # TypeScript check tanpa run test
+npm test              # run all tests
+npm run test:smoke    # smoke tests only (happy path)
+npm run test:login    # login suite only
+npm run typecheck     # TypeScript check without running tests
 ```
 
 ---
 
-## Generate Test Baru dengan Claude
+## Generating New Tests with Claude
 
-Ada 3 jalur untuk generate automation test. Pilih berdasarkan kondisi kamu.
+There are 3 paths for generating automation tests. Choose based on your situation.
 
 ```
-Path A → Kamu punya PRD           → Analisis PRD → CSV → Gherkin + POM + Steps
-Path B → Tidak ada PRD            → Claude explore web → CSV → Gherkin + POM + Steps
-Path C → Kamu punya test case CSV → Claude generate otomasi dari CSV kamu
+Path A → You have a PRD            → Analyze PRD → CSV → Gherkin + POM + Steps
+Path B → No PRD available          → Claude explores the web → CSV → Gherkin + POM + Steps
+Path C → You have a test case CSV  → Claude generates automation from your CSV
 ```
 
-> **Penting:** Semua output Claude masuk ke `output/` dulu — bukan langsung ke production.
-> Kamu review dulu, baru promote ke `features/`, `pages/`, `step-definitions/`.
+> **Note:** All Claude output goes to `output/` first — not directly to production.
+> Review it first, then promote to `features/`, `pages/`, `step-definitions/`.
 
 ---
 
-### Path A — Dari PRD
+### Path A — From a PRD
 
-**1. Simpan PRD ke `input/prd/`**
+**1. Save PRD to `input/prd/`**
 ```
-input/prd/[feature]_[tanggal].txt
-```
-
-**2. Kirim ke Claude:**
-```
-Mode 1 Path A: Analisis PRD di input/prd/[feature]_[tanggal].txt
-App: [nama-app] | Fitur: [nama-fitur]
+input/prd/[feature]_[date].txt
 ```
 
-**3. Claude memberi verdict:**
-- **LAYAK** → lanjut ke langkah 4
-- **PERLU REVISI** → baca `output/feedback/[feature]_prd_[tanggal].txt`, revisi PRD, ulangi dari langkah 2
+**2. Send to Claude:**
+```
+Mode 1 Path A: Analyze PRD at input/prd/[feature]_[date].txt
+App: [app-name] | Feature: [feature-name]
+```
+
+**3. Claude returns a verdict:**
+- **APPROVED** → continue to step 4
+- **NEEDS REVISION** → read `output/feedback/[feature]_prd_[date].txt`, revise the PRD, and repeat from step 2
 
 **4. Generate test cases + automation:**
 ```
-Mode 2 Path A: Generate test cases + Mode 3: Generate semua artefak automation
+Mode 2 Path A: Generate test cases + Mode 3: Generate all automation artifacts
 ```
 
 **Output:**
 ```
-output/testcases-from-prd/[feature]_[tanggal].csv    ← import ke Testmo
-output/gherkin/[feature]_[tanggal].feature
-output/automation/[Page]Page_[tanggal].ts
-output/automation/[feature].steps_[tanggal].ts
+output/testcases-from-prd/[feature]_[date].csv    ← import to Testmo
+output/gherkin/[feature]_[date].feature
+output/automation/[Page]Page_[date].ts
+output/automation/[feature].steps_[date].ts
 ```
 
 <details>
-<summary>Contoh — SauceDemo checkout</summary>
+<summary>Example — SauceDemo checkout</summary>
 
 ```
-# Langkah 2
-Mode 1 Path A: Analisis PRD di input/prd/checkout_2026-04-26.txt
-App: saucedemo | Fitur: checkout
+# Step 2
+Mode 1 Path A: Analyze PRD at input/prd/checkout_2026-04-26.txt
+App: saucedemo | Feature: checkout
 
-# Langkah 4 (jika LAYAK)
-Mode 2 Path A: Generate test cases + Mode 3: Generate semua artefak automation
+# Step 4 (if APPROVED)
+Mode 2 Path A: Generate test cases + Mode 3: Generate all automation artifacts
 ```
 
-Output yang dihasilkan:
+Generated output:
 ```
 output/testcases-from-prd/checkout_2026-04-26.csv
 output/gherkin/checkout_2026-04-26.feature
@@ -99,31 +99,31 @@ output/automation/checkout.steps_2026-04-26.ts
 
 ---
 
-### Path B — Explore Web (tanpa PRD)
+### Path B — Explore Web (no PRD)
 
-**Kirim ke Claude:**
+**Send to Claude:**
 ```
-Mode 2+3 Path B: Explore halaman [nama-halaman] di [url-halaman]
-App: [nama-app] | Fitur: [nama-fitur]
+Mode 2+3 Path B: Explore the [page-name] page at [page-url]
+App: [app-name] | Feature: [feature-name]
 ```
 
 **Output:**
 ```
-output/testcases-from-webexploratory/[feature]_[tanggal].csv
-output/gherkin/[feature]_[tanggal].feature
-output/automation/[Page]Page_[tanggal].ts
-output/automation/[feature].steps_[tanggal].ts
+output/testcases-from-webexploratory/[feature]_[date].csv
+output/gherkin/[feature]_[date].feature
+output/automation/[Page]Page_[date].ts
+output/automation/[feature].steps_[date].ts
 ```
 
 <details>
-<summary>Contoh — SauceDemo cart</summary>
+<summary>Example — SauceDemo cart</summary>
 
 ```
-Mode 2+3 Path B: Explore halaman cart di https://www.saucedemo.com/cart.html
-App: saucedemo | Fitur: cart
+Mode 2+3 Path B: Explore the cart page at https://www.saucedemo.com/cart.html
+App: saucedemo | Feature: cart
 ```
 
-Output yang dihasilkan:
+Generated output:
 ```
 output/testcases-from-webexploratory/cart_2026-04-26.csv
 output/gherkin/cart_2026-04-26.feature
@@ -134,35 +134,35 @@ output/automation/cart.steps_2026-04-26.ts
 
 ---
 
-### Path C — Dari Test Cases Manual
+### Path C — From Manual Test Cases
 
-**1. Simpan CSV export dari Testmo ke `input/testcases/`**
+**1. Save the CSV export from Testmo to `input/testcases/`**
 ```
 input/testcases/[feature]_manual.csv
 ```
 
-**2. Kirim ke Claude:**
+**2. Send to Claude:**
 ```
-Mode 3C Path C: Generate automation dari input/testcases/[feature]_manual.csv
-App: [nama-app] | URL: [url-halaman]
+Mode 3C Path C: Generate automation from input/testcases/[feature]_manual.csv
+App: [app-name] | URL: [page-url]
 ```
 
 **Output:**
 ```
-output/gherkin/[feature]_[tanggal].feature
-output/automation/[Page]Page_[tanggal].ts
-output/automation/[feature].steps_[tanggal].ts
+output/gherkin/[feature]_[date].feature
+output/automation/[Page]Page_[date].ts
+output/automation/[feature].steps_[date].ts
 ```
 
 <details>
-<summary>Contoh — SauceDemo checkout manual</summary>
+<summary>Example — SauceDemo checkout manual</summary>
 
 ```
-Mode 3C Path C: Generate automation dari input/testcases/checkout_manual.csv
+Mode 3C Path C: Generate automation from input/testcases/checkout_manual.csv
 App: saucedemo | URL: https://www.saucedemo.com/checkout-step-one.html
 ```
 
-Output yang dihasilkan:
+Generated output:
 ```
 output/gherkin/checkout_2026-04-26.feature
 output/automation/CheckoutPage_2026-04-26.ts
@@ -172,9 +172,9 @@ output/automation/checkout.steps_2026-04-26.ts
 
 ---
 
-## Review & Promote ke Production
+## Review & Promote to Production
 
-Setelah output selesai direview, promote ke production folders:
+Once the output has been reviewed, promote to production folders:
 
 ```
 output/gherkin/[feature].feature      → features/[feature].feature
@@ -182,7 +182,7 @@ output/automation/[Page]Page.ts       → pages/[Page]Page.ts
 output/automation/[feature].steps.ts  → step-definitions/[feature].steps.ts
 ```
 
-Setelah promote, **update `support/CustomWorld.ts`** — tambahkan properti untuk Page class baru:
+After promoting, **update `support/CustomWorld.ts`** — add a property for the new Page class:
 
 ```typescript
 // support/CustomWorld.ts
@@ -190,46 +190,46 @@ import type { CartPage } from "../pages/CartPage";
 
 export class CustomWorld extends World {
   // ... existing properties ...
-  cartPage?: CartPage;  // ← tambahkan ini
+  cartPage?: CartPage;  // ← add this
 }
 ```
 
-Lalu jalankan typecheck untuk memastikan tidak ada error:
+Then run typecheck to verify there are no errors:
 ```bash
 npm run typecheck
 ```
 
 ---
 
-## Menambah App Baru
+## Adding a New App
 
-**1. Salin template config:**
+**1. Copy the config template:**
 ```
 .claude/apps/_TEMPLATE.md  →  .claude/apps/[app-name].md
 ```
 
-**2. Isi semua field di file baru** (URL, auth, test accounts, known quirks).
+**2. Fill in all fields in the new file** (URL, auth, test accounts, known quirks).
 
-**3. Sebut nama app saat prompting ke Claude:**
+**3. Reference the app name when prompting Claude:**
 ```
 Mode 2+3 Path B: Explore ... App: [app-name]
 ```
 
 ---
 
-## Struktur Folder
+## Folder Structure
 
 ```
 input/
-├── prd/                             ← Path A: dokumen PRD
-└── testcases/                       ← Path C: CSV manual dari Testmo
+├── prd/                             ← Path A: PRD documents
+└── testcases/                       ← Path C: manual CSV from Testmo
 
-output/                              ← staging — review sebelum promote
-├── testcases-from-prd/              ← CSV dari Path A
-├── testcases-from-webexploratory/   ← CSV dari Path B
+output/                              ← staging — review before promoting
+├── testcases-from-prd/              ← CSV from Path A
+├── testcases-from-webexploratory/   ← CSV from Path B
 ├── gherkin/                         ← .feature files
 ├── automation/                      ← POM + step definitions
-└── feedback/                        ← feedback PRD jika tidak lolos threshold
+└── feedback/                        ← PRD feedback if below threshold
 
 features/                            ← PRODUCTION: Gherkin (single source of truth)
 pages/                               ← PRODUCTION: Page Object Model
@@ -237,30 +237,30 @@ step-definitions/                    ← PRODUCTION: step implementations
 support/                             ← CustomWorld, hooks
 utils/                               ← selfHealingLocator, logger, dataGenerator
 config/                              ← env loader
-.claude/                             ← instruksi untuk Claude agent
+.claude/                             ← instructions for Claude agent
 ```
 
 ---
 
-## Laporan & Diagnostics
+## Reports & Diagnostics
 
-Setelah test berjalan, hasil tersimpan di `reports/`:
+After tests run, results are stored in `reports/`:
 
-| File | Isi |
+| File | Contents |
 |---|---|
 | `reports/login-report.html` | HTML report per suite |
 | `reports/login-report.json` | JSON report per suite |
-| `reports/failed-*.png` | Screenshot saat step gagal |
+| `reports/failed-*.png` | Screenshot at failing step |
 | `reports/diagnostics-*.log` | Locator trace + browser console log |
-| `reports/locator-history.json` | History fallback locator — sinyal jika primary locator perlu diperbaiki |
+| `reports/locator-history.json` | Fallback locator history — signals when a primary locator needs fixing |
 
 ---
 
-## Referensi untuk Tim
+## Team Reference
 
-| File | Isi |
+| File | Contents |
 |---|---|
 | `.claude/CONVENTIONS.md` | Coding standards, POM pattern, locator strategy |
-| `.claude/PIPELINE.md` | Detail teknis setiap mode pipeline |
-| `.claude/apps/saucedemo.md` | Config SauceDemo — **sample app**, bukan default framework |
-| `.claude/apps/_TEMPLATE.md` | Template untuk mendaftarkan app baru |
+| `.claude/PIPELINE.md` | Technical details for each pipeline mode |
+| `.claude/apps/saucedemo.md` | SauceDemo config — **sample app**, not the default framework |
+| `.claude/apps/_TEMPLATE.md` | Template for registering a new app |

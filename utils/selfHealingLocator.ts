@@ -23,6 +23,10 @@ type LocatorHistory = Record<string, LocatorUsage[]>;
 
 const HISTORY_PATH = path.resolve(process.cwd(), "reports", "locator-history.json");
 
+// Accumulates usages for the current scenario in memory.
+// Drained once per scenario by SelfHealingLocatorResolver.flush() called from the After hook.
+const pendingUsages: LocatorUsage[] = [];
+
 export class SelfHealingLocatorResolver {
   private readonly runtimeUsage: LocatorUsage[] = [];
 
@@ -48,10 +52,10 @@ export class SelfHealingLocatorResolver {
           at: new Date().toISOString()
         };
         this.runtimeUsage.push(usage);
+        pendingUsages.push(usage);
         this.scenarioLogs.push(
           `[self-heal] ${elementName} resolved with ${candidate.name} (${candidate.kind}: ${usage.value})`
         );
-        await this.persistUsage(usage);
         return locator.first();
       } catch {
         this.scenarioLogs.push(`[self-heal] ${elementName} failed candidate ${candidate.name}`);
@@ -63,6 +67,29 @@ export class SelfHealingLocatorResolver {
         .map((candidate) => `${candidate.name}:${candidate.kind}`)
         .join(", ")}`
     );
+  }
+
+  // Called once per scenario from the After hook — drains pendingUsages and writes to disk.
+  static async flush(): Promise<void> {
+    if (pendingUsages.length === 0) return;
+    const toWrite = pendingUsages.splice(0);
+
+    await fs.mkdir(path.dirname(HISTORY_PATH), { recursive: true });
+    let current: LocatorHistory = {};
+    try {
+      const existing = await fs.readFile(HISTORY_PATH, "utf-8");
+      current = JSON.parse(existing) as LocatorHistory;
+    } catch {
+      current = {};
+    }
+
+    for (const usage of toWrite) {
+      const history = current[usage.elementName] ?? [];
+      history.push(usage);
+      current[usage.elementName] = history.slice(-30);
+    }
+
+    await fs.writeFile(HISTORY_PATH, JSON.stringify(current, null, 2), "utf-8");
   }
 
   private toLocator(candidate: LocatorCandidate): Locator {
@@ -89,21 +116,5 @@ export class SelfHealingLocatorResolver {
       return `${candidate.role} ${JSON.stringify(candidate.options ?? {})}`;
     }
     return candidate.value;
-  }
-
-  private async persistUsage(usage: LocatorUsage): Promise<void> {
-    await fs.mkdir(path.dirname(HISTORY_PATH), { recursive: true });
-    let current: LocatorHistory = {};
-    try {
-      const existing = await fs.readFile(HISTORY_PATH, "utf-8");
-      current = JSON.parse(existing) as LocatorHistory;
-    } catch {
-      current = {};
-    }
-
-    const history = current[usage.elementName] ?? [];
-    history.push(usage);
-    current[usage.elementName] = history.slice(-30);
-    await fs.writeFile(HISTORY_PATH, JSON.stringify(current, null, 2), "utf-8");
   }
 }

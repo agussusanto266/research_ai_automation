@@ -8,6 +8,7 @@ module.exports = {
       "json:reports/report.json"
     ],
     publishQuiet: true,
-    parallel: 1
+    parallel: 1,
+    timeout: 30000
   }
 };

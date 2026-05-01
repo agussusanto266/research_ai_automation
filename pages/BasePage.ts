@@ -5,7 +5,7 @@ export class BasePage {
   protected readonly page: Page;
   protected readonly resolver: SelfHealingLocatorResolver;
 
-  constructor(page: Page, scenarioLogs: string[] = []) {
+  constructor(page: Page, scenarioLogs: string[]) {
     this.page = page;
     this.resolver = new SelfHealingLocatorResolver(page, scenarioLogs);
   }

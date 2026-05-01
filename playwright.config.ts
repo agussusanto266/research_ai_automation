@@ -1,11 +1,17 @@
+// ============================================================
+// NOT USED BY THE CUCUMBER RUNNER — REFERENCE ONLY
+// ============================================================
+// This file only applies to `npx playwright test`.
+// The Cucumber runner (`npm test`) manages browser lifecycle
+// via support/hooks.ts + support/CustomWorld.ts.
+// Environment config is in config/env.ts.
+// Do not rely on this file for any test execution behaviour.
+// ============================================================
 import { defineConfig } from "@playwright/test";
 import dotenv from "dotenv";
 
 dotenv.config();
 
-// This config applies when running with `npx playwright test`.
-// The primary test runner for this project is Cucumber.js (`npm test`).
-// Browser lifecycle for Cucumber is managed in support/hooks.ts.
 export default defineConfig({
   timeout: 30000,
   use: {

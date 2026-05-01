@@ -1,6 +1,9 @@
-import { After, Before, AfterStep, Status } from "@cucumber/cucumber";
+import { After, Before, AfterStep, Status, setDefaultTimeout } from "@cucumber/cucumber";
+
+setDefaultTimeout(30000);
 import { promises as fs } from "node:fs";
 import { CustomWorld } from "./CustomWorld";
+import { SelfHealingLocatorResolver } from "../utils/selfHealingLocator";
 
 Before(async function (this: CustomWorld) {
   this.scenarioLogs = [];
@@ -41,6 +44,7 @@ After(async function (this: CustomWorld, scenario) {
     await fs.writeFile(diagnosticPath, diagnostics, "utf-8");
   }
 
+  await SelfHealingLocatorResolver.flush();
   await this.page.close();
   await this.context.close();
   await this.browser.close();

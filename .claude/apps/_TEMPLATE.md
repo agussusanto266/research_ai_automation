@@ -1,17 +1,17 @@
 # App Config Template
 
-> Salin file ini, rename ke `[app-name].md`, lalu isi semua field.
-> Field bertanda [WAJIB] harus diisi sebelum pipeline bisa dijalankan.
+> Copy this file, rename it to `[app-name].md`, then fill in all fields.
+> Fields marked [REQUIRED] must be completed before the pipeline can run.
 
 ---
 
 ## App Identity
 
 ```
-App Name    : [WAJIB] nama singkat app, e.g. "saucedemo", "tokopedia-seller"
-Display Name: [WAJIB] nama lengkap, e.g. "SauceDemo", "Tokopedia Seller Center"
-Base URL    : [WAJIB] e.g. https://www.example.com
-Environment : [WAJIB] staging / production / local
+App Name    : [REQUIRED] short app name, e.g. "saucedemo", "tokopedia-seller"
+Display Name: [REQUIRED] full name, e.g. "SauceDemo", "Tokopedia Seller Center"
+Base URL    : [REQUIRED] e.g. https://www.example.com
+Environment : [REQUIRED] staging / production / local
 ```
 
 ---
@@ -19,55 +19,55 @@ Environment : [WAJIB] staging / production / local
 ## Authentication
 
 ```
-Auth Required : [WAJIB] yes / no
+Auth Required : [REQUIRED] yes / no
 Auth Type     : form-login / oauth / api-key / none
-Login URL     : [jika berbeda dari Base URL]
+Login URL     : [if different from Base URL]
 ```
 
 ### Test Accounts
 
-| Role | Username | Password | Keterangan |
+| Role | Username | Password | Notes |
 |---|---|---|---|
-| [role] | [username] | [password] | [e.g. "Happy path — gunakan untuk semua positive test"] |
-| [role] | [username] | [password] | [e.g. "Locked — untuk negative case login"] |
+| [role] | [username] | [password] | [e.g. "Happy path — use for all positive tests"] |
+| [role] | [username] | [password] | [e.g. "Locked — use for negative login cases"] |
 
-> Jangan simpan credential production di sini. File ini untuk test accounts saja.
+> Do not store production credentials here. This file is for test accounts only.
 
 ---
 
 ## Pages / Modules
 
-Daftarkan halaman atau modul utama yang akan di-test.
+List the main pages or modules to be tested.
 
-| Nama halaman | URL path | Keterangan |
+| Page name | URL path | Notes |
 |---|---|---|
-| [Nama] | `/[path]` | [deskripsi singkat] |
-| [Nama] | `/[path]` | [deskripsi singkat] |
+| [Name] | `/[path]` | [brief description] |
+| [Name] | `/[path]` | [brief description] |
 
 ---
 
 ## Known Quirks & Limitations
 
-Catat perilaku khusus app ini yang perlu diketahui saat generate test cases atau automation.
+Document app-specific behavior that needs to be known when generating test cases or automation.
 
-- [ ] [contoh: "Tombol submit disabled selama 2 detik setelah page load — jangan assert terlalu cepat"]
-- [ ] [contoh: "API response lambat di staging — tambah timeout di BasePage jika diperlukan"]
-- [ ] [contoh: "user X menampilkan UI buggy — hanya gunakan untuk edge case visual, bukan happy path"]
+- [ ] [example: "Submit button is disabled for 2 seconds after page load — do not assert too quickly"]
+- [ ] [example: "API response is slow in staging — add timeout to BasePage if needed"]
+- [ ] [example: "user X shows buggy UI — use only for visual edge cases, not happy path"]
 
 ---
 
 ## Existing Automation Coverage
 
-Update bagian ini setiap kali ada fitur baru yang sudah di-automate.
+Update this section every time a new feature is automated.
 
-| Fitur | Feature file | Status |
-|---|---|---|
-| [nama fitur] | `features/[file].feature` | automated / partial / manual only |
+| Feature | Feature file | Step definitions | POM |
+|---|---|---|---|
+| [feature name] | `features/[app]/[file].feature` | `step-definitions/[app]/[file].steps.ts` | `pages/[Name]Page.ts` |
 
 ---
 
 ## Changelog
 
-| Tanggal | Perubahan |
+| Date | Change |
 |---|---|
 | [YYYY-MM-DD] | Initial config |

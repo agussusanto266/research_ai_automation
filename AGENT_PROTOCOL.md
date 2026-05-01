@@ -1,6 +1,6 @@
 # AGENT_PROTOCOL.md — Deprecated
 
-Konten file ini telah dipindahkan ke `.claude/INTAKE.md` sebagai bagian dari
-refactor ke arsitektur layered prompt.
+The content of this file has been moved to `.claude/INTAKE.md` as part of a
+refactor to the layered prompt architecture.
 
-Silakan baca `.claude/MANIFEST.md` untuk reading order yang berlaku.
+Please read `.claude/MANIFEST.md` for the current reading order.

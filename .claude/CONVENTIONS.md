@@ -1,7 +1,7 @@
 # CONVENTIONS.md — Coding Standards & Conventions
 
-> Baca file ini sebelum generate kode apapun (Gherkin, POM, step definitions).
-> Konvensi ini berlaku untuk semua aplikasi — bukan spesifik satu app.
+> Read this file before generating any code (Gherkin, POM, step definitions).
+> These conventions apply to all applications — not specific to any single app.
 
 ---
 
@@ -11,7 +11,7 @@
 |---|---|
 | Language | TypeScript |
 | Test runner | Cucumber.js (`npm test` / `npm run test:smoke`) |
-| Browser automation | Playwright (library — bukan Playwright Test) |
+| Browser automation | Playwright (library — not Playwright Test) |
 | Test pattern | Page Object Model (POM) |
 | Locator strategy | Self-healing via `SelfHealingLocatorResolver` |
 | Test management | Testmo (import via CSV) |
@@ -22,7 +22,7 @@
 
 ## Page Object Model
 
-Template yang benar — sesuai actual codebase:
+Correct template — matching the actual codebase:
 
 ```typescript
 // pages/[PageName]Page.ts
@@ -30,7 +30,7 @@ import type { Page } from "playwright";
 import { BasePage } from "./BasePage";
 import type { LocatorCandidate } from "../utils/selfHealingLocator";
 
-// Definisikan candidates di luar class (module-level const)
+// Define candidates outside the class (module-level const)
 const ELEMENT_CANDIDATES: LocatorCandidate[] = [
   { name: "primary-testid", kind: "testId",  value: "data-test-value" },
   { name: "secondary-role", kind: "role",    role: "button", options: { name: "Label" } },
@@ -39,7 +39,7 @@ const ELEMENT_CANDIDATES: LocatorCandidate[] = [
 
 export class [PageName]Page extends BasePage {
   constructor(page: Page, scenarioLogs: string[]) {
-    super(page, scenarioLogs);  // resolver tersedia via this.resolver (dari BasePage)
+    super(page, scenarioLogs);  // resolver is available via this.resolver (from BasePage)
   }
 
   async [action](): Promise<void> {
@@ -54,63 +54,63 @@ export class [PageName]Page extends BasePage {
 }
 ```
 
-**Aturan POM:**
-- Candidates array didefinisikan sebagai `const` di module level — bukan di dalam class atau method
-- Nama candidates: `"primary-testid"`, `"secondary-[kind]"`, `"fallback-[kind]"` — konsisten
-- Constructor selalu menerima `(page: Page, scenarioLogs: string[])` dan memanggil `super(page, scenarioLogs)`
-- `this.resolver` tersedia dari BasePage — jangan buat resolver baru di dalam Page class
-- Nama file: `PascalCasePage.ts`
+**POM Rules:**
+- Candidates array must be defined as a `const` at module level — not inside a class or method
+- Candidate names follow the pattern: `"primary-testid"`, `"secondary-[kind]"`, `"fallback-[kind]"` — consistent
+- Constructor always takes `(page: Page, scenarioLogs: string[])` and calls `super(page, scenarioLogs)`
+- `this.resolver` is available from BasePage — do not create a new resolver inside a Page class
+- File name: `PascalCasePage.ts`
 - Method names: camelCase, verb-first — `login()`, `getErrorMessage()`, `isVisible()`
-- Jangan expose raw selector ke step definitions
+- Do not expose raw selectors to step definitions
 
 ---
 
-## CustomWorld — Cara Update
+## CustomWorld — How to Update
 
-Setiap kali menambahkan Page class baru, **wajib** tambahkan properti ke `support/CustomWorld.ts`:
+Every time a new Page class is added, **must** add a property to `support/CustomWorld.ts`:
 
 ```typescript
 // support/CustomWorld.ts
-import type { CartPage } from "../pages/CartPage";     // ← tambah import
-import type { CheckoutPage } from "../pages/CheckoutPage"; // ← tambah import
+import type { CartPage } from "../pages/CartPage";          // ← add import
+import type { CheckoutPage } from "../pages/CheckoutPage";  // ← add import
 
 export class CustomWorld extends World {
   // ... existing properties ...
-  cartPage?: CartPage;         // ← tambah properti
-  checkoutPage?: CheckoutPage; // ← tambah properti
+  cartPage?: CartPage;         // ← add property
+  checkoutPage?: CheckoutPage; // ← add property
 }
 ```
 
-Tanpa ini, TypeScript akan error saat step definition mengakses `this.cartPage`.
+Without this, TypeScript will error when a step definition accesses `this.cartPage`.
 
 ---
 
-## Environment Variables — Cara Import
+## Environment Variables — How to Import
 
-Selalu gunakan typed loader dari `config/env.ts` — jangan akses `process.env` langsung:
+Always use the typed loader from `config/env.ts` — do not access `process.env` directly:
 
 ```typescript
 import { env } from "../config/env";
 
-// Penggunaan:
+// Usage:
 await this.page.goto(env.baseUrl);
 ```
 
-Tambahkan ke `config/env.ts` jika butuh env var baru:
+Add to `config/env.ts` if a new env var is needed:
 ```typescript
 export const env = {
   baseUrl: process.env.BASE_URL ?? "https://fallback.url/",
   headless: process.env.HEADLESS === "true"
-  // tambah di sini
+  // add here
 };
 ```
 
 ---
 
-## Utils yang Tersedia
+## Available Utils
 
 ### `utils/logger.ts`
-Gunakan untuk log non-diagnostic di luar skenario test:
+Use for non-diagnostic logs outside test scenarios:
 
 ```typescript
 import { logger } from "../utils/logger";
@@ -119,10 +119,10 @@ logger.info("Navigating to checkout");
 logger.error("Unexpected state detected");
 ```
 
-Untuk log yang muncul di diagnostics saat test gagal, gunakan `this.scenarioLogs.push(...)` bukan logger.
+For logs that appear in diagnostics when a test fails, use `this.scenarioLogs.push(...)` instead of logger.
 
 ### `utils/dataGenerator.ts`
-Gunakan untuk generate test data dinamis (bukan hardcoded):
+Use to generate dynamic test data (not hardcoded):
 
 ```typescript
 import { randomEmail } from "../utils/dataGenerator";
@@ -135,14 +135,14 @@ const email = randomEmail("buyer");  // → buyer+1234567890@example.test
 ## Gherkin / Feature Files
 
 ```gherkin
-Feature: [Nama fitur — match dengan PRD section atau nama halaman]
+Feature: [Feature name — matches PRD section or page name]
 
   Background:
     Given I am on the [page name] page
-    And I am logged in as "[role]"        # hanya jika fitur butuh auth
+    And I am logged in as "[role]"        # only if the feature requires auth
 
   @smoke
-  Scenario Outline: [Happy path — outcome yang divalidasi]
+  Scenario Outline: [Happy path — outcome being validated]
     When I [action] with "<param>"
     Then [expected outcome] should be "<outcome>"
 
@@ -155,13 +155,13 @@ Feature: [Nama fitur — match dengan PRD section atau nama halaman]
     ...
 ```
 
-**Aturan:**
-- Gunakan Bahasa Inggris untuk semua Gherkin
-- Nama file: `kebab-case.feature`
-- Satu feature file per fitur/modul
-- Tag `@smoke` untuk happy path, `@regression` untuk full suite
-- Gunakan `Scenario Outline` + `Examples` untuk data-driven tests
-- Jangan hardcode credential di Gherkin — gunakan parameter dari `Examples` atau `test-data/`
+**Rules:**
+- Use English for all Gherkin
+- File name: `kebab-case.feature`
+- One feature file per feature/module
+- Tag `@smoke` for happy path, `@regression` for full suite
+- Use `Scenario Outline` + `Examples` for data-driven tests
+- Do not hardcode credentials in Gherkin — use parameters from `Examples` or `test-data/`
 
 ---
 
@@ -192,17 +192,17 @@ Then("[expected outcome] should be {string}", async function (this: CustomWorld,
 });
 ```
 
-**Aturan:**
-- Nama file: `[feature].steps.ts`
-- Selalu gunakan `this: CustomWorld` untuk type safety
-- Gunakan `assert.ok()` / `assert.strictEqual()` dari `node:assert` — bukan `expect()` Playwright
-- Selalu assert bahwa Page sudah diinisialisasi sebelum digunakan (`assert.ok(this.cartPage, ...)`)
-- Cek step-definitions yang sudah ada — reuse jika step serupa sudah defined
-- Step harus generic dan reusable
+**Rules:**
+- File name: `[feature].steps.ts`
+- Always use `this: CustomWorld` for type safety
+- Use `assert.ok()` / `assert.strictEqual()` from `node:assert` — not Playwright's `expect()`
+- Always assert that the Page is initialized before use (`assert.ok(this.cartPage, ...)`)
+- Check existing step definitions — reuse if a similar step is already defined
+- Steps must be generic and reusable
 
 ---
 
-## Locator Priority (untuk mengisi LocatorCandidate[])
+## Locator Priority (for filling LocatorCandidate[])
 
 ```
 1. testId    → kind: "testId",  value: "data-test-attr"
@@ -213,13 +213,13 @@ Then("[expected outcome] should be {string}", async function (this: CustomWorld,
 6. xpath     → kind: "xpath",   value: "//xpath"   ← last resort
 ```
 
-Jangan gunakan: `nth-child`, dynamic class, selector berbasis posisi.
+Do not use: `nth-child`, dynamic classes, position-based selectors.
 
 ---
 
 ## Naming Conventions
 
-| Artefak | Convention | Contoh |
+| Artifact | Convention | Example |
 |---|---|---|
 | Feature file | `features/[app]/[feature].feature` | `features/saucedemo/cart.feature` |
 | Page class | `pages/[PageName]Page.ts` | `pages/CartPage.ts` |
@@ -232,28 +232,28 @@ Jangan gunakan: `nth-child`, dynamic class, selector berbasis posisi.
 
 ## Known Decisions
 
-| Keputusan | Alasan |
+| Decision | Reason |
 |---|---|
-| `assert` dari `node:assert` | Konsistensi dengan codebase yang ada |
-| `scenarioLogs` di-pass ke BasePage via constructor | Resolver butuh reference yang sama untuk menulis log |
-| Screenshot on failure di `AfterStep` | Tangkap state saat langkah gagal, bukan setelah cleanup |
-| `reports/locator-history.json` | Tracking fallback usage — sinyal locator primary perlu diperbaiki |
-| Parallel: 1 worker | Menghindari race condition; naikkan setelah test suite stabil |
-| `env.baseUrl` dari `config/env.ts` | Typed, bukan raw `process.env` — mengurangi typo |
+| `assert` from `node:assert` | Consistency with the existing codebase |
+| `scenarioLogs` passed to BasePage via constructor | Resolver needs the same reference to write logs |
+| Screenshot on failure in `AfterStep` | Capture state at the failing step, not after cleanup |
+| `reports/locator-history.json` | Tracks fallback usage — signals that a primary locator needs fixing |
+| Parallel: 1 worker | Avoids race conditions; increase after the test suite is stable |
+| `env.baseUrl` from `config/env.ts` | Typed, not raw `process.env` — reduces typos |
 
 ---
 
 ## What NOT to Do
 
-- Jangan buat `SelfHealingLocatorResolver` baru di dalam Page class — sudah tersedia via `this.resolver`
-- Jangan gunakan `nth-child` atau dynamic class sebagai locator candidate
-- Jangan expose selector string ke step definitions — semua akses elemen lewat POM method
-- Jangan buat step definition baru jika step serupa sudah ada
-- Jangan hardcode URL atau credential — gunakan `env.baseUrl` dan `test-data/`
-- Jangan tambahkan `page.waitForTimeout()` — gunakan auto-wait Playwright
-- Jangan generate file tanpa baca konvensi ini terlebih dahulu
-- Jangan generate test cases tanpa menerapkan minimal 5 teknik (EP, BVA, ST, DT, EG)
-- Jangan generate CSV test cases langsung ke `input/` — CSV output selalu ke `output/testcases-*/`
-- Jangan lupa update `CustomWorld.ts` saat menambah Page class baru
-- Jangan buat feature file di root `features/` — selalu ke `features/[app]/`
-- Jangan buat step file di root `step-definitions/` — selalu ke `step-definitions/[app]/`
+- Do not create a new `SelfHealingLocatorResolver` inside a Page class — it is already available via `this.resolver`
+- Do not use `nth-child` or dynamic classes as locator candidates
+- Do not expose selector strings to step definitions — all element access goes through POM methods
+- Do not create a new step definition if a similar one already exists
+- Do not hardcode URLs or credentials — use `env.baseUrl` and `test-data/`
+- Do not add `page.waitForTimeout()` — use Playwright's auto-wait
+- Do not generate files without reading these conventions first
+- Do not generate test cases without applying all 5 techniques (EP, BVA, ST, DT, EG)
+- Do not generate CSV test cases directly to `input/` — CSV output always goes to `output/testcases-*/`
+- Do not forget to update `CustomWorld.ts` when adding a new Page class
+- Do not create feature files in the root `features/` — always go to `features/[app]/`
+- Do not create step files in the root `step-definitions/` — always go to `step-definitions/[app]/`
