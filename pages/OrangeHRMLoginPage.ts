@@ -67,16 +67,6 @@ export class OrangeHRMLoginPage extends BasePage {
     }
   }
 
-  async getInlineErrorText(): Promise<string> {
-    const errorEl = await this.resolver.resolve("inlineError", INLINE_ERROR_CANDIDATES);
-    return (await errorEl.textContent())?.trim() ?? "";
-  }
-
-  async getAlertErrorText(): Promise<string> {
-    const alertEl = await this.resolver.resolve("alertError", ALERT_ERROR_CANDIDATES);
-    return (await alertEl.textContent())?.trim() ?? "";
-  }
-
   async getAnyErrorText(): Promise<string> {
     // Try alert-level error first (e.g. "Invalid credentials"), then inline (e.g. "Required")
     try {

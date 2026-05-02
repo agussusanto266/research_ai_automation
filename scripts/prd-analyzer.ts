@@ -52,13 +52,8 @@ interface FrameworkScore {
   notes: string;
 }
 
-function countMatches(text: string, patterns: RegExp[]): number {
-  return patterns.filter((p) => p.test(text)).length;
-}
-
 // SMART — Specific, Measurable, Achievable, Relevant, Time-bound
 function scoreSMART(text: string): FrameworkScore {
-  const lower = text.toLowerCase();
   const checks = [
     {
       label: 'Specific',

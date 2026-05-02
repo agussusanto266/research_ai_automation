@@ -13,7 +13,8 @@
     "test:checkout-complete": "node scripts/run-tests.js --tags \"@checkout-complete\"",
     "test:product-detail": "node scripts/run-tests.js --tags \"@product-detail\"",
     "typecheck": "tsc --noEmit",
-    "test:orangehrm-login": "node scripts/run-tests.js --tags \"@orangehrm\" --format progress --format html:reports/orangehrm-login-report.html --format json:reports/orangehrm-login-report.json",
+    "test:orangehrm-login": "node scripts/run-tests.js --tags \"@orangehrm\" --report reports/orangehrm-login-report.html",
+    "test:todo": "node scripts/run-tests.js --tags \"@todomvc\" --report reports/todo-report.html",
     "analyze:prd": "npx ts-node scripts/prd-analyzer.ts",
     "report:open": "open-cli reports/report.html"
   },

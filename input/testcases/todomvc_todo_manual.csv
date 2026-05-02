@@ -1,0 +1,22 @@
+Folder,Name,Preconditions,Step,Test Data,Expected Result,Priority,Type,Automatable
+Todo,EP - Add a valid todo item,TodoMVC app is open; todo list is empty,Click the "What needs to be done?" input field,,Input field is focused,High,Functional,Yes
+Todo,EP - Add a valid todo item,,Type a todo item text,Buy groceries,Text appears in the input field,High,Functional,Yes
+Todo,EP - Add a valid todo item,,Press Enter,,New todo item "Buy groceries" appears in the list; input field is cleared; footer shows "1 item left",High,Functional,Yes
+Todo,EP - Submit empty input does not add item,TodoMVC app is open; todo list is empty,Click the input field and press Enter without typing anything,,No new item is added to the list; list remains empty,High,Functional,Yes
+Todo,BVA - Add todo with minimum length,TodoMVC app is open,Type a 2-character todo in the input,Hi,Characters appear in input,Medium,Functional,Yes
+Todo,BVA - Add todo with minimum length,,Press Enter,,"Todo item ""Hi"" is added to the list; footer shows ""1 item left""",Medium,Functional,Yes
+Todo,ST - Mark todo as completed,"1 active todo ""Walk the dog"" exists in the list",Click the circle checkbox on the left of the todo item,,Checkbox becomes checked; todo text has strikethrough styling; footer count decreases by 1,High,Functional,Yes
+Todo,ST - Unmark a completed todo,"1 completed todo ""Walk the dog"" exists in the list",Click the checked checkbox of the completed todo,,Checkbox becomes unchecked; strikethrough is removed; footer count increases by 1,High,Functional,Yes
+Todo,ST - Delete a todo item,"1 todo ""Take out trash"" exists in the list",Hover over the todo item,,Delete (×) button becomes visible on the right side,High,Functional,Yes
+Todo,ST - Delete a todo item,,Click the × button,,Todo item "Take out trash" is removed from the list; list is empty; footer disappears,High,Functional,Yes
+Todo,ST - Filter Active shows only active todos,"2 todos exist: ""Pay bills"" (active) and ""Call mom"" (completed)",Click the "Active" filter link,,"Only ""Pay bills"" is visible; ""Call mom"" is hidden; ""Active"" filter link is highlighted",High,Functional,Yes
+Todo,ST - Filter Completed shows only completed todos,"2 todos exist: ""Pay bills"" (active) and ""Call mom"" (completed)",Click the "Completed" filter link,,"Only ""Call mom"" is visible; ""Pay bills"" is hidden; ""Completed"" filter link is highlighted",High,Functional,Yes
+Todo,ST - Filter All shows all todos,"2 todos exist: ""Pay bills"" (active) and ""Call mom"" (completed); currently on Active filter",Click the "All" filter link,,Both todos are visible; "All" filter link is highlighted,High,Functional,Yes
+Todo,ST - Clear completed removes only completed todos,"2 todos exist: ""Pay bills"" (active) and ""Call mom"" (completed)",Click the "Clear completed" button,,"Only ""Pay bills"" remains in the list; ""Call mom"" is removed; footer shows ""1 item left""; ""Clear completed"" button disappears",High,Functional,Yes
+Todo,DT - Footer shows correct count for 1 active item,TodoMVC app is open; todo list is empty,Add 1 todo item,Read a book,Footer displays "1 item left",High,Functional,Yes
+Todo,DT - Footer shows correct count for 2 active items,TodoMVC app is open; todo list is empty,Add 2 todo items,Read a book / Learn TypeScript,Footer displays "2 items left",Medium,Functional,Yes
+Todo,DT - Footer shows correct count after completing 1 of 2,"2 active todos exist: ""Read a book"" and ""Learn TypeScript""",Mark ""Read a book"" as completed,,Footer displays "1 item left",Medium,Functional,Yes
+Todo,EG - Add todo with special characters,TodoMVC app is open,Type text with special characters in input,"Todo!@# special^chars",Text appears in input as-is,Medium,Functional,Yes
+Todo,EG - Add todo with special characters,,Press Enter,,"Todo appears in list with text: Todo!@# special^chars; no script executes",Medium,Functional,Yes
+Todo,EG - Add todo with whitespace only,TodoMVC app is open,Type only spaces in the input field,(3 spaces),Spaces appear in the input field,Medium,Functional,Yes
+Todo,EG - Add todo with whitespace only,,Press Enter,,No new item is added to the list; list remains empty; input is cleared,Medium,Functional,Yes

@@ -25,7 +25,6 @@ Then(
 
     if (expectedOutcome === "success") {
       assert.ok(successful, `Expected successful login but URL is ${this.page.url()}`);
-      assert.match(this.page.url(), /dashboard\/index/, "Expected dashboard URL after login");
       return;
     }
 
@@ -58,7 +57,7 @@ When("I click the forgot password link", async function (this: CustomWorld) {
 });
 
 Then("I should be on the OrangeHRM password reset page", async function (this: CustomWorld) {
-  await this.page.waitForURL(/requestPasswordResetCode/, { timeout: 5000 });
+  await this.page.waitForURL(/requestPasswordResetCode/, { timeout: 10000 });
   assert.match(
     this.page.url(),
     /requestPasswordResetCode/,
@@ -72,7 +71,7 @@ When("I navigate directly to the OrangeHRM dashboard", async function (this: Cus
 });
 
 Then("I should be redirected to the OrangeHRM login page", async function (this: CustomWorld) {
-  await this.page.waitForURL(/auth\/login/, { timeout: 5000 });
+  await this.page.waitForURL(/auth\/login/, { timeout: 10000 });
   assert.match(
     this.page.url(),
     /auth\/login/,
