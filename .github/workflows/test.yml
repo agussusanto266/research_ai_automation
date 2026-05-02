@@ -1,0 +1,231 @@
+name: Test Suite
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+# Branch → environment routing:
+#   main    → "production" GitHub Environment (set vars.BASE_URL to prod URL in repo settings)
+#   develop → "staging"    GitHub Environment (set vars.BASE_URL to staging URL in repo settings)
+# If vars.BASE_URL is not configured the inline defaults are used as fallback.
+
+env:
+  CI: true
+  HEADLESS: "true"
+  LOCATOR_TIMEOUT_MS: "3000"
+  LOCATOR_TIMEOUT_SLOW_MS: "10000"
+  CUCUMBER_WORKERS: "2"
+  SAUCEDEMO_PASSWORD: ${{ secrets.SAUCEDEMO_PASSWORD }}
+
+jobs:
+  smoke:
+    name: Smoke — ${{ github.ref == 'refs/heads/main' && 'Production' || 'Staging' }}
+    runs-on: ubuntu-latest
+    environment: ${{ github.ref == 'refs/heads/main' && 'production' || 'staging' }}
+    env:
+      BASE_URL:             ${{ vars.BASE_URL             || 'https://www.saucedemo.com/' }}
+      ORANGEHRM_BASE_URL:   ${{ vars.ORANGEHRM_BASE_URL   || 'https://opensource-demo.orangehrmlive.com' }}
+      TODOMVC_BASE_URL:     ${{ vars.TODOMVC_BASE_URL     || 'https://todomvc.com/examples/react/dist' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Cache Playwright browsers
+        id: playwright-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: playwright-${{ runner.os }}-
+
+      - name: Install Playwright browsers
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: npx playwright install chromium --with-deps
+
+      - name: Install Playwright system deps (cached run)
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: npx playwright install-deps chromium
+
+      - name: Clean allure results
+        run: rm -rf allure-results && mkdir -p allure-results
+
+      - name: Run smoke tests
+        run: npm run test:smoke
+
+      - name: Merge locator history
+        if: always()
+        run: npm run merge:locator-history
+
+      - name: Merge a11y reports
+        if: always()
+        run: npm run merge:a11y
+
+      - name: Generate Allure report
+        if: always()
+        run: npx allure generate allure-results --clean -o allure-report
+
+      - name: Upload smoke reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: smoke-reports-${{ github.run_id }}
+          path: |
+            reports/
+            allure-results/
+            allure-report/
+          retention-days: 14
+
+  regression:
+    name: Regression — ${{ github.ref == 'refs/heads/main' && 'Production' || 'Staging' }}
+    runs-on: ubuntu-latest
+    needs: smoke
+    environment: ${{ github.ref == 'refs/heads/main' && 'production' || 'staging' }}
+    env:
+      BASE_URL:             ${{ vars.BASE_URL             || 'https://www.saucedemo.com/' }}
+      ORANGEHRM_BASE_URL:   ${{ vars.ORANGEHRM_BASE_URL   || 'https://opensource-demo.orangehrmlive.com' }}
+      TODOMVC_BASE_URL:     ${{ vars.TODOMVC_BASE_URL     || 'https://todomvc.com/examples/react/dist' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Cache Playwright browsers
+        id: playwright-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: playwright-${{ runner.os }}-
+
+      - name: Install Playwright browsers
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: npx playwright install chromium --with-deps
+
+      - name: Install Playwright system deps (cached run)
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: npx playwright install-deps chromium
+
+      - name: Download smoke Allure report (for history)
+        uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: smoke-reports-${{ github.run_id }}
+          path: smoke-artifact
+
+      - name: Restore Allure history for trend graphs
+        run: |
+          mkdir -p allure-results
+          if [ -d smoke-artifact/allure-report/history ]; then
+            cp -r smoke-artifact/allure-report/history allure-results/
+            echo "Allure history restored from smoke run"
+          else
+            echo "No prior Allure history found — first run for this branch"
+          fi
+
+      - name: Run regression suite
+        run: npm run test:regression
+
+      - name: Merge locator history
+        if: always()
+        run: npm run merge:locator-history
+
+      - name: Merge a11y reports
+        if: always()
+        run: npm run merge:a11y
+
+      - name: Generate Allure report with history
+        if: always()
+        run: npx allure generate allure-results --clean -o allure-report
+
+      - name: Upload regression reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: regression-reports-${{ github.run_id }}
+          path: |
+            reports/
+            allure-results/
+            allure-report/
+          retention-days: 14
+
+  docker-build:
+    name: Docker build + sanity
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t research-ai-automation:ci .
+
+      - name: Run sanity check inside container
+        run: |
+          docker run \
+            -e CI=true \
+            -e HEADLESS=true \
+            -e SAUCEDEMO_PASSWORD="${{ secrets.SAUCEDEMO_PASSWORD }}" \
+            research-ai-automation:ci \
+            npm run test:sanity
+
+  cross-browser:
+    name: Smoke — Firefox (${{ github.ref == 'refs/heads/main' && 'Production' || 'Staging' }})
+    runs-on: ubuntu-latest
+    needs: smoke
+    environment: ${{ github.ref == 'refs/heads/main' && 'production' || 'staging' }}
+    env:
+      BROWSER: "firefox"
+      BASE_URL: ${{ vars.BASE_URL || 'https://www.saucedemo.com/' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Cache Playwright browsers
+        id: playwright-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-firefox-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: playwright-firefox-${{ runner.os }}-
+
+      - name: Install Playwright browsers
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: npx playwright install firefox --with-deps
+
+      - name: Install Playwright system deps (cached run)
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: npx playwright install-deps firefox
+
+      - name: Clean allure results
+        run: rm -rf allure-results && mkdir -p allure-results
+
+      - name: Run smoke tests on Firefox
+        run: npx cucumber-js --profile firefox
+
+      - name: Upload Firefox reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: firefox-reports-${{ github.run_id }}
+          path: reports/
+          retention-days: 14

@@ -1,6 +1,6 @@
 import type { Page } from "playwright";
 import { BasePage } from "./BasePage";
-import type { LocatorCandidate } from "../utils/selfHealingLocator";
+import type { LocatorCandidate, LocatorUsage } from "../utils/selfHealingLocator";
 
 const PAGE_TITLE_CANDIDATES: LocatorCandidate[] = [
   { name: "primary-testid", kind: "testId", value: "title" },
@@ -32,8 +32,8 @@ const BACK_HOME_CANDIDATES: LocatorCandidate[] = [
 ];
 
 export class CheckoutCompletePage extends BasePage {
-  constructor(page: Page, scenarioLogs: string[]) {
-    super(page, scenarioLogs);
+  constructor(page: Page, scenarioLogs: string[], locatorUsages: LocatorUsage[]) {
+    super(page, scenarioLogs, locatorUsages);
   }
 
   async goto(baseUrl: string): Promise<void> {

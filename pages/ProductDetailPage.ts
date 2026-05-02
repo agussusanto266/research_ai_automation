@@ -1,6 +1,6 @@
 import type { Page } from "playwright";
 import { BasePage } from "./BasePage";
-import type { LocatorCandidate } from "../utils/selfHealingLocator";
+import type { LocatorCandidate, LocatorUsage } from "../utils/selfHealingLocator";
 
 const BACK_BUTTON_CANDIDATES: LocatorCandidate[] = [
   { name: "primary-testid", kind: "testId", value: "back-to-products" },
@@ -37,8 +37,8 @@ const REMOVE_CANDIDATES: LocatorCandidate[] = [
 ];
 
 export class ProductDetailPage extends BasePage {
-  constructor(page: Page, scenarioLogs: string[]) {
-    super(page, scenarioLogs);
+  constructor(page: Page, scenarioLogs: string[], locatorUsages: LocatorUsage[]) {
+    super(page, scenarioLogs, locatorUsages);
   }
 
   async goto(baseUrl: string, productId: number): Promise<void> {

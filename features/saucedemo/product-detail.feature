@@ -38,6 +38,15 @@ Feature: SauceDemo product detail
         | 0  |
         | 5  |
 
+    @regression
+    Scenario Outline: Invalid or out-of-range product ID stays on the product detail URL
+      When I navigate to the product detail page for item <id>
+      Then I should be on the product detail page
+
+      Examples:
+        | id  |
+        | 999 |
+
     # --- ST: State Transition ---
 
     @smoke

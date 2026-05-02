@@ -6,7 +6,7 @@ import { ProductDetailPage } from "../../pages/ProductDetailPage";
 import { CustomWorld } from "../../support/CustomWorld";
 
 When("I navigate to the product detail page for item {int}", async function (this: CustomWorld, id: number) {
-  this.productDetailPage = new ProductDetailPage(this.page, this.scenarioLogs);
+  this.productDetailPage = new ProductDetailPage(this.page, this.scenarioLogs, this.locatorUsages);
   await this.productDetailPage.goto(env.baseUrl, id);
 });
 
@@ -28,7 +28,7 @@ When("I click Back to Products", async function (this: CustomWorld) {
 When("I navigate to the cart by clicking the cart icon", async function (this: CustomWorld) {
   await this.page.locator('[data-test="shopping-cart-link"]').click();
   await this.page.waitForURL(/cart\.html/);
-  this.cartPage = new CartPage(this.page, this.scenarioLogs);
+  this.cartPage = new CartPage(this.page, this.scenarioLogs, this.locatorUsages);
 });
 
 When("I click the first product name on the inventory", async function (this: CustomWorld) {

@@ -5,12 +5,13 @@ import { OrangeHRMLoginPage } from "../../pages/OrangeHRMLoginPage";
 import { CustomWorld } from "../../support/CustomWorld";
 
 Given("I am on the OrangeHRM login page", async function (this: CustomWorld) {
-  this.orangehrmLoginPage = new OrangeHRMLoginPage(this.page, this.scenarioLogs);
+  this.orangehrmLoginPage = new OrangeHRMLoginPage(this.page, this.scenarioLogs, this.locatorUsages);
   await this.orangehrmLoginPage.goto(env.orangehrmBaseUrl);
 });
 
 When(
   "I sign in with username {string} and password {string}",
+  { timeout: 60000 },
   async function (this: CustomWorld, username: string, password: string) {
     assert.ok(this.orangehrmLoginPage, "OrangeHRMLoginPage is not initialized");
     await this.orangehrmLoginPage.signIn(username, password);
@@ -19,6 +20,7 @@ When(
 
 Then(
   "the OrangeHRM login result should be {string}",
+  { timeout: 60000 },
   async function (this: CustomWorld, expectedOutcome: string) {
     assert.ok(this.orangehrmLoginPage, "OrangeHRMLoginPage is not initialized");
     const successful = await this.orangehrmLoginPage.isLoginSuccessful();

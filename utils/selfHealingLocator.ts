@@ -1,6 +1,7 @@
 import type { Locator, Page } from "playwright";
 import { promises as fs } from "node:fs";
 import path from "node:path";
+import { env } from "../config/env";
 
 export type LocatorCandidate =
   | { name: string; kind: "testId"; value: string }
@@ -11,7 +12,7 @@ export type LocatorCandidate =
   | { name: string; kind: "css"; value: string }
   | { name: string; kind: "xpath"; value: string };
 
-type LocatorUsage = {
+export type LocatorUsage = {
   elementName: string;
   candidateName: string;
   kind: LocatorCandidate["kind"];
@@ -21,29 +22,30 @@ type LocatorUsage = {
 
 type LocatorHistory = Record<string, LocatorUsage[]>;
 
-const HISTORY_PATH = path.resolve(process.cwd(), "reports", "locator-history.json");
-
-// Accumulates usages for the current scenario in memory.
-// Drained once per scenario by SelfHealingLocatorResolver.flush() called from the After hook.
-const pendingUsages: LocatorUsage[] = [];
+const HISTORY_PATH = path.resolve(process.cwd(), "reports", `locator-history-${process.pid}.json`);
 
 export class SelfHealingLocatorResolver {
   private readonly runtimeUsage: LocatorUsage[] = [];
 
   constructor(
     private readonly page: Page,
-    private readonly scenarioLogs: string[]
+    private readonly scenarioLogs: string[],
+    private readonly sharedUsages: LocatorUsage[]
   ) {}
 
   getUsageLogs(): LocatorUsage[] {
     return [...this.runtimeUsage];
   }
 
-  async resolve(elementName: string, candidates: LocatorCandidate[], timeoutMs = 1200): Promise<Locator> {
+  async resolve(
+    elementName: string,
+    candidates: LocatorCandidate[],
+    timeoutMs: number = env.locatorTimeout
+  ): Promise<Locator> {
     for (const candidate of candidates) {
       const locator = this.toLocator(candidate);
       try {
-        await locator.first().waitFor({ state: "attached", timeout: timeoutMs });
+        await locator.first().waitFor({ state: "visible", timeout: timeoutMs });
         const usage: LocatorUsage = {
           elementName,
           candidateName: candidate.name,
@@ -52,7 +54,7 @@ export class SelfHealingLocatorResolver {
           at: new Date().toISOString()
         };
         this.runtimeUsage.push(usage);
-        pendingUsages.push(usage);
+        this.sharedUsages.push(usage);
         this.scenarioLogs.push(
           `[self-heal] ${elementName} resolved with ${candidate.name} (${candidate.kind}: ${usage.value})`
         );
@@ -64,15 +66,15 @@ export class SelfHealingLocatorResolver {
 
     throw new Error(
       `Unable to resolve locator for "${elementName}". Tried: ${candidates
-        .map((candidate) => `${candidate.name}:${candidate.kind}`)
+        .map((c) => `${c.name}:${c.kind}`)
         .join(", ")}`
     );
   }
 
-  // Called once per scenario from the After hook — drains pendingUsages and writes to disk.
-  static async flush(): Promise<void> {
-    if (pendingUsages.length === 0) return;
-    const toWrite = pendingUsages.splice(0);
+  // Called once per scenario from the After hook — drains sharedUsages and writes to disk.
+  static async flush(usages: LocatorUsage[]): Promise<void> {
+    if (usages.length === 0) return;
+    const toWrite = usages.splice(0);
 
     await fs.mkdir(path.dirname(HISTORY_PATH), { recursive: true });
     let current: LocatorHistory = {};

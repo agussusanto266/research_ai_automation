@@ -1,44 +1,53 @@
 import { Given, When, Then } from "@cucumber/cucumber";
 import assert from "node:assert";
 import { env } from "../../config/env";
+import { CartPage } from "../../pages/CartPage";
+import { CheckoutPage } from "../../pages/CheckoutPage";
 import { CheckoutCompletePage } from "../../pages/CheckoutCompletePage";
+import { InventoryPage } from "../../pages/InventoryPage";
 import { CustomWorld } from "../../support/CustomWorld";
 
 Given("I have completed the checkout process", async function (this: CustomWorld) {
-  await this.page.goto(`${env.baseUrl}inventory.html`, { waitUntil: "domcontentloaded" });
-  await this.page.locator('[data-test^="add-to-cart"]').first().click();
-  await this.page.goto(`${env.baseUrl}cart.html`, { waitUntil: "domcontentloaded" });
-  await this.page.locator('[data-test="checkout"]').click();
+  this.inventoryPage = new InventoryPage(this.page, this.scenarioLogs, this.locatorUsages);
+  await this.inventoryPage.goto(env.baseUrl);
+  await this.inventoryPage.addFirstProductToCart();
+
+  const cart = new CartPage(this.page, this.scenarioLogs, this.locatorUsages);
+  await cart.goto(env.baseUrl);
+  await cart.checkout();
   await this.page.waitForURL(/checkout-step-one\.html/);
-  await this.page.locator('[data-test="firstName"]').fill("Test");
-  await this.page.locator('[data-test="lastName"]').fill("User");
-  await this.page.locator('[data-test="postalCode"]').fill("12345");
-  await this.page.locator('[data-test="continue"]').click();
+
+  this.checkoutPage = new CheckoutPage(this.page, this.scenarioLogs, this.locatorUsages);
+  await this.checkoutPage.fillInfo("Test", "User", "12345");
+  await this.checkoutPage.clickContinue();
   await this.page.waitForURL(/checkout-step-two\.html/);
-  await this.page.locator('[data-test="finish"]').click();
+  await this.checkoutPage.clickFinish();
   await this.page.waitForURL(/checkout-complete\.html/);
-  this.checkoutCompletePage = new CheckoutCompletePage(this.page, this.scenarioLogs);
+
+  this.checkoutCompletePage = new CheckoutCompletePage(this.page, this.scenarioLogs, this.locatorUsages);
 });
 
 When(
   "I complete the checkout flow with first name {string} last name {string} and zip {string}",
   async function (this: CustomWorld, firstName: string, lastName: string, zip: string) {
-    await this.page.goto(`${env.baseUrl}cart.html`, { waitUntil: "domcontentloaded" });
-    await this.page.locator('[data-test="checkout"]').click();
+    const cart = new CartPage(this.page, this.scenarioLogs, this.locatorUsages);
+    await cart.goto(env.baseUrl);
+    await cart.checkout();
     await this.page.waitForURL(/checkout-step-one\.html/);
-    await this.page.locator('[data-test="firstName"]').fill(firstName);
-    await this.page.locator('[data-test="lastName"]').fill(lastName);
-    await this.page.locator('[data-test="postalCode"]').fill(zip);
-    await this.page.locator('[data-test="continue"]').click();
+
+    this.checkoutPage = new CheckoutPage(this.page, this.scenarioLogs, this.locatorUsages);
+    await this.checkoutPage.fillInfo(firstName, lastName, zip);
+    await this.checkoutPage.clickContinue();
     await this.page.waitForURL(/checkout-step-two\.html/);
-    await this.page.locator('[data-test="finish"]').click();
+    await this.checkoutPage.clickFinish();
     await this.page.waitForURL(/checkout-complete\.html/);
-    this.checkoutCompletePage = new CheckoutCompletePage(this.page, this.scenarioLogs);
+
+    this.checkoutCompletePage = new CheckoutCompletePage(this.page, this.scenarioLogs, this.locatorUsages);
   }
 );
 
 When("I navigate to the checkout complete page", async function (this: CustomWorld) {
-  this.checkoutCompletePage = new CheckoutCompletePage(this.page, this.scenarioLogs);
+  this.checkoutCompletePage = new CheckoutCompletePage(this.page, this.scenarioLogs, this.locatorUsages);
   await this.checkoutCompletePage.goto(env.baseUrl);
 });
 

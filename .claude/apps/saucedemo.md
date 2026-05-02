@@ -62,7 +62,10 @@ Login URL     : https://www.saucedemo.com  (login is on the home page)
 |---|---|---|---|
 | Healthcheck | `features/saucedemo/healthcheck.feature` | `step-definitions/saucedemo/healthcheck.steps.ts` | — |
 | Login | `features/saucedemo/login.feature` | `step-definitions/saucedemo/login.steps.ts` | `pages/LoginPage.ts` |
+| Inventory | `features/saucedemo/inventory.feature` | `step-definitions/saucedemo/inventory.steps.ts` | `pages/InventoryPage.ts` |
 | Cart | `features/saucedemo/cart.feature` | `step-definitions/saucedemo/cart.steps.ts` | `pages/CartPage.ts` |
+| Checkout Step 1 | `features/saucedemo/checkout-step1.feature` | `step-definitions/saucedemo/checkout.steps.ts` | `pages/CheckoutPage.ts` |
+| Checkout Step 2 | `features/saucedemo/checkout-step2.feature` | `step-definitions/saucedemo/checkout.steps.ts` | `pages/CheckoutPage.ts` |
 | Checkout Complete | `features/saucedemo/checkout-complete.feature` | `step-definitions/saucedemo/checkout-complete.steps.ts` | `pages/CheckoutCompletePage.ts` |
 | Product Detail | `features/saucedemo/product-detail.feature` | `step-definitions/saucedemo/product-detail.steps.ts` | `pages/ProductDetailPage.ts` |
 

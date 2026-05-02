@@ -1,6 +1,6 @@
 import type { Page } from "playwright";
 import { BasePage } from "./BasePage";
-import type { LocatorCandidate } from "../utils/selfHealingLocator";
+import type { LocatorCandidate, LocatorUsage } from "../utils/selfHealingLocator";
 import assert from "node:assert";
 
 const USERNAME_CANDIDATES: LocatorCandidate[] = [
@@ -28,8 +28,8 @@ const ERROR_CANDIDATES: LocatorCandidate[] = [
 ];
 
 export class LoginPage extends BasePage {
-  constructor(page: Page, scenarioLogs: string[]) {
-    super(page, scenarioLogs);
+  constructor(page: Page, scenarioLogs: string[], locatorUsages: LocatorUsage[]) {
+    super(page, scenarioLogs, locatorUsages);
   }
 
   async goto(baseUrl: string): Promise<void> {

@@ -1,0 +1,16 @@
+node_modules/
+dist/
+reports/
+.env
+.env.*
+!.env.example
+.git/
+.claude/settings.local.json
+playwright-report/
+allure-results/
+allure-report/
+screenshots/
+videos/
+traces/
+*.log
+*.tsbuildinfo

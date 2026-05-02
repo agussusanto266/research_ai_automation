@@ -4,7 +4,8 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "lib": ["ES2020", "DOM"],
-    "types": ["node"],
+    "typeRoots": ["./types", "./node_modules/@types"],
+    "types": ["node", "pngjs"],
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
@@ -19,6 +20,8 @@
     "pages/**/*.ts",
     "utils/**/*.ts",
     "config/**/*.ts",
-    "scripts/**/*.ts"
+    "scripts/**/*.ts",
+    "types/**/*.ts",
+    "test-data/**/*.ts"
   ]
 }

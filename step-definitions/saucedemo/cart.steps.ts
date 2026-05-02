@@ -2,21 +2,16 @@ import { Given, When, Then } from "@cucumber/cucumber";
 import assert from "node:assert";
 import { env } from "../../config/env";
 import { CartPage } from "../../pages/CartPage";
+import { CartFixture } from "../../support/fixtures/CartFixture";
 import { CustomWorld } from "../../support/CustomWorld";
 
 Given("I have {int} items in the cart", async function (this: CustomWorld, count: number) {
-  if (count === 0) return;
-  await this.page.goto(`${env.baseUrl}inventory.html`, { waitUntil: "load" });
-  for (let i = 0; i < count; i++) {
-    await this.page.locator('[data-test^="add-to-cart"]').first().click();
-    await this.page.locator('[data-test="shopping-cart-badge"]')
-      .filter({ hasText: String(i + 1) })
-      .waitFor({ state: "visible" });
-  }
+  const fixture = new CartFixture(this.page, this.scenarioLogs, this.locatorUsages);
+  await fixture.addItems(count);
 });
 
 When("I navigate to the cart page", async function (this: CustomWorld) {
-  this.cartPage = new CartPage(this.page, this.scenarioLogs);
+  this.cartPage = new CartPage(this.page, this.scenarioLogs, this.locatorUsages);
   await this.cartPage.goto(env.baseUrl);
 });
 
@@ -57,14 +52,14 @@ Then("the cart should be empty", async function (this: CustomWorld) {
 });
 
 Then("the cart badge should show {string}", async function (this: CustomWorld, expected: string) {
-  const badge = this.page.locator('[data-test="shopping-cart-badge"]');
-  await badge.waitFor({ state: "visible" });
-  const actual = (await badge.textContent())?.trim();
+  if (!this.cartPage) this.cartPage = new CartPage(this.page, this.scenarioLogs, this.locatorUsages);
+  const actual = await this.cartPage.getBadgeCount();
   assert.strictEqual(actual, expected, `Expected cart badge "${expected}" but got "${actual}"`);
 });
 
 Then("the cart badge should not be visible", async function (this: CustomWorld) {
-  const visible = await this.page.locator('[data-test="shopping-cart-badge"]').isVisible();
+  if (!this.cartPage) this.cartPage = new CartPage(this.page, this.scenarioLogs, this.locatorUsages);
+  const visible = await this.cartPage.isBadgeVisible();
   assert.ok(!visible, "Expected cart badge to be hidden but it is visible");
 });
 
@@ -85,9 +80,8 @@ Then("the cart should display item name price and remove button", async function
   const price = await this.cartPage.getItemPriceAt(0);
   assert.ok(name.length > 0, "Expected item name to be visible but got empty string");
   assert.ok(price.length > 0, "Expected item price to be visible but got empty string");
-  const item = this.page.locator('.cart_item').first();
-  const removeBtn = item.getByRole("button", { name: "Remove" });
-  assert.ok(await removeBtn.isVisible(), "Expected Remove button to be visible");
+  const hasRemove = await this.cartPage.hasRemoveButtonAt(0);
+  assert.ok(hasRemove, "Expected Remove button to be visible");
 });
 
 Then("I should be on the inventory page", async function (this: CustomWorld) {

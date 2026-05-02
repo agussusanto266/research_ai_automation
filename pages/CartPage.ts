@@ -1,6 +1,6 @@
 import type { Page } from "playwright";
 import { BasePage } from "./BasePage";
-import type { LocatorCandidate } from "../utils/selfHealingLocator";
+import type { LocatorCandidate, LocatorUsage } from "../utils/selfHealingLocator";
 
 const CART_TITLE_CANDIDATES: LocatorCandidate[] = [
   { name: "primary-testid", kind: "testId", value: "title" },
@@ -25,9 +25,13 @@ const CHECKOUT_BUTTON_CANDIDATES: LocatorCandidate[] = [
   { name: "fallback-css", kind: "css", value: "[data-test='checkout']" }
 ];
 
+const CART_ITEM_CSS = ".cart_item";
+const ITEM_NAME_CSS = '[data-test="inventory-item-name"]';
+const ITEM_PRICE_CSS = '[data-test="inventory-item-price"]';
+
 export class CartPage extends BasePage {
-  constructor(page: Page, scenarioLogs: string[]) {
-    super(page, scenarioLogs);
+  constructor(page: Page, scenarioLogs: string[], locatorUsages: LocatorUsage[]) {
+    super(page, scenarioLogs, locatorUsages);
   }
 
   async goto(baseUrl: string): Promise<void> {
@@ -66,23 +70,28 @@ export class CartPage extends BasePage {
   }
 
   async getItemNameAt(index: number): Promise<string> {
-    const item = this.page.locator('.cart_item').nth(index);
-    return (await item.locator('[data-test="inventory-item-name"]').textContent())?.trim() ?? "";
+    const item = this.page.locator(CART_ITEM_CSS).nth(index);
+    return (await item.locator(ITEM_NAME_CSS).textContent())?.trim() ?? "";
   }
 
   async getItemPriceAt(index: number): Promise<string> {
-    const item = this.page.locator('.cart_item').nth(index);
-    return (await item.locator('[data-test="inventory-item-price"]').textContent())?.trim() ?? "";
+    const item = this.page.locator(CART_ITEM_CSS).nth(index);
+    return (await item.locator(ITEM_PRICE_CSS).textContent())?.trim() ?? "";
   }
 
   async removeItemAt(index: number): Promise<void> {
-    const item = this.page.locator('.cart_item').nth(index);
+    const item = this.page.locator(CART_ITEM_CSS).nth(index);
     await item.getByRole("button", { name: "Remove" }).click();
   }
 
   async clickProductNameAt(index: number): Promise<void> {
-    const item = this.page.locator('.cart_item').nth(index);
-    await item.locator('[data-test="inventory-item-name"]').click();
+    const item = this.page.locator(CART_ITEM_CSS).nth(index);
+    await item.locator(ITEM_NAME_CSS).click();
+  }
+
+  async hasRemoveButtonAt(index: number): Promise<boolean> {
+    const item = this.page.locator(CART_ITEM_CSS).nth(index);
+    return item.getByRole("button", { name: "Remove" }).isVisible();
   }
 
   async continueShopping(): Promise<void> {

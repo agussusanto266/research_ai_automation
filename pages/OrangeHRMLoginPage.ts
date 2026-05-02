@@ -1,22 +1,22 @@
 import type { Page } from "playwright";
 import { BasePage } from "./BasePage";
-import type { LocatorCandidate } from "../utils/selfHealingLocator";
+import type { LocatorCandidate, LocatorUsage } from "../utils/selfHealingLocator";
 
 const USERNAME_CANDIDATES: LocatorCandidate[] = [
-  { name: "primary-label",   kind: "label", value: "Username" },
-  { name: "secondary-css",   kind: "css",   value: "input[name='username']" },
+  { name: "primary-css",     kind: "css",   value: "input[name='username']" },
+  { name: "secondary-label", kind: "label", value: "Username" },
   { name: "fallback-xpath",  kind: "xpath", value: "//input[@name='username']" }
 ];
 
 const PASSWORD_CANDIDATES: LocatorCandidate[] = [
-  { name: "primary-label",   kind: "label", value: "Password" },
-  { name: "secondary-css",   kind: "css",   value: "input[name='password']" },
+  { name: "primary-css",     kind: "css",   value: "input[name='password']" },
+  { name: "secondary-label", kind: "label", value: "Password" },
   { name: "fallback-xpath",  kind: "xpath", value: "//input[@name='password']" }
 ];
 
 const LOGIN_BUTTON_CANDIDATES: LocatorCandidate[] = [
-  { name: "primary-role",    kind: "role",  role: "button", options: { name: "Login" } },
-  { name: "secondary-css",   kind: "css",   value: "button[type='submit']" },
+  { name: "primary-css",     kind: "css",   value: "button[type='submit']" },
+  { name: "secondary-role",  kind: "role",  role: "button", options: { name: "Login" } },
   { name: "fallback-xpath",  kind: "xpath", value: "//button[@type='submit']" }
 ];
 
@@ -39,13 +39,14 @@ const FORGOT_PASSWORD_CANDIDATES: LocatorCandidate[] = [
 ];
 
 export class OrangeHRMLoginPage extends BasePage {
-  constructor(page: Page, scenarioLogs: string[]) {
-    super(page, scenarioLogs);
+  constructor(page: Page, scenarioLogs: string[], locatorUsages: LocatorUsage[]) {
+    super(page, scenarioLogs, locatorUsages);
   }
 
   async goto(baseUrl: string): Promise<void> {
-    await this.page.goto(`${baseUrl}/web/index.php/auth/login`, { waitUntil: "domcontentloaded" });
-    await this.page.waitForURL(/auth\/login/);
+    await this.page.goto(`${baseUrl}/web/index.php/auth/login`, { waitUntil: "domcontentloaded", timeout: 60000 });
+    await this.page.waitForURL(/auth\/login/, { timeout: 30000 });
+    await this.page.locator("input[name='username']").waitFor({ state: "visible", timeout: 30000 });
   }
 
   async signIn(username: string, password: string): Promise<void> {
@@ -58,9 +59,9 @@ export class OrangeHRMLoginPage extends BasePage {
     await loginButton.click();
   }
 
-  async isLoginSuccessful(): Promise<boolean> {
+  async isLoginSuccessful(timeout = 45000): Promise<boolean> {
     try {
-      await this.page.waitForURL(/dashboard\/index/, { timeout: 10000 });
+      await this.page.waitForURL(/dashboard\/index/, { timeout });
       return true;
     } catch {
       return /dashboard\/index/.test(this.page.url());

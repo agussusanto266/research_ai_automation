@@ -5,7 +5,7 @@ import { TodoPage } from "../../pages/TodoPage";
 import { CustomWorld } from "../../support/CustomWorld";
 
 Given("I am on the TodoMVC app", async function (this: CustomWorld) {
-  this.todoPage = new TodoPage(this.page, this.scenarioLogs);
+  this.todoPage = new TodoPage(this.page, this.scenarioLogs, this.locatorUsages);
   await this.todoPage.goto(env.todoMvcBaseUrl);
 });
 
@@ -102,6 +102,8 @@ Then(
 
 Then("only the active todos should be visible", async function (this: CustomWorld) {
   assert.ok(this.todoPage, "TodoPage is not initialized");
+  const active = await this.todoPage.getActiveTodoTexts();
+  assert.ok(active.length > 0, "Expected at least one active todo to be visible but found none");
   const completed = await this.todoPage.getCompletedTodoTexts();
   assert.strictEqual(
     completed.length,
@@ -122,6 +124,8 @@ Then("the completed todos should be hidden", async function (this: CustomWorld) 
 
 Then("only the completed todos should be visible", async function (this: CustomWorld) {
   assert.ok(this.todoPage, "TodoPage is not initialized");
+  const completed = await this.todoPage.getCompletedTodoTexts();
+  assert.ok(completed.length > 0, "Expected at least one completed todo to be visible but found none");
   const active = await this.todoPage.getActiveTodoTexts();
   assert.strictEqual(
     active.length,
