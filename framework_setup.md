@@ -102,16 +102,36 @@ npm run test:regression # full regression suite
 npm run test:sanity     # 1 test paling dasar (untuk verifikasi setup)
 npm run test:unit       # unit test framework internal
 
-# Per fitur
-npm run test:login      # login SauceDemo
-npm run test:cart       # cart SauceDemo
-npm run test:checkout   # checkout SauceDemo
+# Per fitur — SauceDemo
+npm run test:login              # login
+npm run test:inventory          # product list + sorting
+npm run test:cart               # keranjang belanja
+npm run test:checkout-step1     # form billing
+npm run test:checkout-step2     # order review
+npm run test:checkout-complete  # konfirmasi pesanan
+npm run test:product-detail     # halaman detail produk
+
+# Per fitur — OrangeHRM
+npm run test:orangehrm          # semua fitur OrangeHRM
+npm run test:orangehrm-login    # login OrangeHRM saja
+npm run test:orangehrm-dashboard
+npm run test:orangehrm-employee
+
+# Per fitur — TodoMVC
+npm run test:todo               # semua fitur TodoMVC
 
 # Cek kualitas kode
 npm run typecheck       # TypeScript check
 npm run lint            # ESLint check
 npm run format:check    # Prettier check
 npm run format          # Auto-format semua file
+
+# Utilitas
+npm run merge:locator-history  # gabung history self-healing locator dari semua worker
+npm run merge:a11y             # gabung report aksesibilitas
+npm run allure:report          # generate Allure report dari hasil test
+npm run allure:open            # buka Allure report di browser
+npm run report:open            # buka HTML report standar
 ```
 
 Reports tersimpan di `reports/` — file HTML langsung bisa dibuka di browser.
@@ -541,10 +561,10 @@ Pipeline berjalan otomatis di GitHub Actions setiap push ke `main` atau `develop
 ┌─────────────────────────────────────────┐
 │  smoke (Chromium)                       │
 │  Semua scenario @smoke                  │
-└──────┬──────────────┬────────┬──────────┘
-       ↓              ↓        ↓        ↓
-  regression     docker    firefox   webkit
-  @regression    sanity    @smoke    @smoke
+└────┬──────────────┬──────────┬──────────┘
+     ↓              ↓          ↓          ↓
+regression    docker-build  cross-browser  cross-browser
+@regression   sanity build  firefox @smoke webkit @smoke
 ```
 
 **Setup CI di GitHub:**
