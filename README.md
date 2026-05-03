@@ -1,90 +1,125 @@
 # research_ai_automation
 
-AI-driven QA automation pipeline — generates test cases and automation scripts using Claude as the agent.
-
-**Stack:** TypeScript · Playwright · Cucumber.js · Page Object Model · Self-healing locators · Testmo
-
-> **Panduan lengkap untuk tim:** lihat [framework_setup.md](framework_setup.md)
+> Repo ini menggunakan **Claude AI** sebagai agent untuk membuat test automation secara otomatis — mulai dari analisis kebutuhan sampai menghasilkan kode siap pakai.
 
 ---
 
-## Quick Start
+## Apa yang dilakukan repo ini?
+
+1. **Kamu kasih input** — bisa berupa dokumen PRD, URL halaman, atau file test case manual (CSV)
+2. **Claude menganalisis dan merancang** — menghasilkan test case dengan 5 teknik pengujian (EP, BVA, State Transition, Decision Table, Error Guessing)
+3. **Claude menulis kodenya** — Gherkin feature files, Page Object Model, dan step definitions — langsung siap dijalankan
+
+**Stack:** TypeScript · Playwright · Cucumber.js · Page Object Model · Self-healing locators
+
+---
+
+## Aplikasi yang sudah punya test automation
+
+| Aplikasi  | URL                                           | Coverage                                          |
+| --------- | --------------------------------------------- | ------------------------------------------------- |
+| SauceDemo | https://www.saucedemo.com                     | Login, Inventory, Cart, Checkout, Product Detail  |
+| OrangeHRM | https://opensource-demo.orangehrmlive.com     | Login, Dashboard, Employee                        |
+| TodoMVC   | https://todomvc.com/examples/react/dist       | Add, Complete, Filter, Delete todo                |
+
+---
+
+## Setup Pertama Kali
+
+**Prasyarat:** Node.js >= 20 ([download](https://nodejs.org))
 
 ```bash
+# 1. Clone repo
+git clone <repo-url>
+cd research_ai_automation
+
+# 2. Install dependencies
 npm install
 npx playwright install chromium
+
+# 3. Buat file .env
 ```
 
-Buat `.env`:
+Isi file `.env`:
 
 ```env
 BASE_URL=https://www.saucedemo.com/
+ORANGEHRM_BASE_URL=https://opensource-demo.orangehrmlive.com
+TODOMVC_BASE_URL=https://todomvc.com/examples/react/dist
 SAUCEDEMO_PASSWORD=secret_sauce
 HEADLESS=false
 ```
 
-```bash
-npm run test:sanity     # verifikasi setup
-npm run test:smoke      # smoke test semua fitur
-npm run test:regression # full regression
-```
-
----
-
-## Generate Automation Baru
-
-Pilih path sesuai yang kamu punya:
-
-| Path  | Kapan pakai                  | Prompt ke Claude                                                      |
-| ----- | ---------------------------- | --------------------------------------------------------------------- |
-| **A** | Punya PRD                    | `Mode 1 Path A: Analyze PRD at input/prd/[file].txt`                  |
-| **B** | Punya URL, tidak ada PRD     | `Mode 2+3 Path B: Explore the [page] at [URL]`                        |
-| **C** | Punya test case manual (CSV) | `Mode 3C Path C: Generate automation from input/testcases/[file].csv` |
-
-Detail setiap path, konvensi kode, dan troubleshooting → [framework_setup.md](framework_setup.md)
-
----
-
-## Scripts
+Verifikasi setup berhasil:
 
 ```bash
-npm run test:smoke        # @smoke — semua app
-npm run test:regression   # @regression — semua app
-npm run test:unit         # unit test framework internal
-npm run typecheck         # TypeScript check
-npm run lint              # ESLint
-npm run format            # Prettier auto-fix
-npm run format:check      # Prettier check (dipakai CI)
+npm run test:sanity
 ```
 
 ---
 
-## Struktur Utama
+## Menjalankan Test
 
+```bash
+npm run test:sanity     # 1 test tercepat — verifikasi setup
+npm run test:smoke      # semua happy path (cepat, ~2 menit)
+npm run test:regression # full suite termasuk edge case
 ```
-input/prd/              ← Path A: simpan PRD di sini
-input/testcases/        ← Path C: simpan CSV manual di sini
-output/                 ← Staging — review sebelum commit
 
-features/[app]/         ← PRODUCTION: Gherkin
-pages/[app]/            ← PRODUCTION: Page Object Model
-step-definitions/[app]/ ← PRODUCTION: Step implementations
+Untuk satu fitur tertentu:
 
-.claude/                ← Instruksi pipeline untuk Claude agent
+```bash
+npm run test:login              # login SauceDemo
+npm run test:cart               # cart SauceDemo
+npm run test:checkout-step1     # form billing
+npm run test:checkout-step2     # order review
+npm run test:checkout-complete  # konfirmasi pesanan
+npm run test:inventory          # product list
+npm run test:product-detail     # halaman detail produk
+npm run test:orangehrm          # semua test OrangeHRM
+npm run test:todo               # semua test TodoMVC
+```
+
+---
+
+## Generate Automation Baru dengan Claude
+
+Buka Claude Code di terminal, lalu pilih salah satu path:
+
+| Situasi                          | Prompt ke Claude                                                                |
+| -------------------------------- | ------------------------------------------------------------------------------- |
+| Punya dokumen PRD / spesifikasi  | `Mode 1 Path A: Analyze PRD at input/prd/[nama-file].txt`                       |
+| Hanya punya URL halaman          | `Mode 2+3 Path B: Explore the [nama halaman] at [URL]`                          |
+| Punya test case manual (CSV)     | `Mode 3C Path C: Generate automation from input/testcases/[nama-file].csv`      |
+
+Panduan lengkap setiap path, konvensi kode, dan cara tambah aplikasi baru → **[framework_setup.md](framework_setup.md)**
+
+---
+
+## Scripts Lainnya
+
+```bash
+npm run typecheck       # cek TypeScript, harus 0 error sebelum commit
+npm run lint            # cek ESLint
+npm run format          # auto-format semua file
+npm run format:check    # cek format (dipakai CI)
+npm run test:unit       # unit test framework internal
+npm run allure:report   # generate Allure report
+npm run allure:open     # buka Allure report di browser
 ```
 
 ---
 
 ## CI/CD
 
-GitHub Actions: `lint → smoke → [regression | docker | firefox | webkit]`
+GitHub Actions berjalan otomatis setiap push. Pipeline: `lint → smoke → [regression | docker-build | firefox | webkit]`
 
-Secrets yang perlu diset di GitHub: `SAUCEDEMO_PASSWORD`
+Secret yang perlu diset di GitHub: `SAUCEDEMO_PASSWORD`
 Variables (per environment): `BASE_URL`, `ORANGEHRM_BASE_URL`, `TODOMVC_BASE_URL`
 
 ---
 
-## Team Reference
+## Dokumen Referensi
 
 | File                                                    | Isi                                                         |
 | ------------------------------------------------------- | ----------------------------------------------------------- |
@@ -92,4 +127,3 @@ Variables (per environment): `BASE_URL`, `ORANGEHRM_BASE_URL`, `TODOMVC_BASE_URL
 | [.claude/CONVENTIONS.md](.claude/CONVENTIONS.md)        | Standar kode POM + step definitions                         |
 | [.claude/PIPELINE.md](.claude/PIPELINE.md)              | Detail teknis setiap mode pipeline                          |
 | [.claude/apps/saucedemo.md](.claude/apps/saucedemo.md)  | Config SauceDemo: URL, credentials, coverage                |
-| [.claude/apps/\_TEMPLATE.md](.claude/apps/_TEMPLATE.md) | Template untuk mendaftarkan app baru                        |
