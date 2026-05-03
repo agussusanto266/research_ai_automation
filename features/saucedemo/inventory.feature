@@ -104,6 +104,13 @@ Feature: SauceDemo inventory
       When I navigate to the inventory page
       Then the inventory page title should be "Products"
 
+    # --- Visual regression ---
+
+    @visual @regression @no-retry
+    Scenario: Visual snapshot — inventory page layout matches baseline
+      When I navigate to the inventory page
+      Then the inventory should contain 6 products
+
   Rule: Access control
 
     @regression

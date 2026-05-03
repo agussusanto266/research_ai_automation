@@ -33,3 +33,7 @@ Feature: SauceDemo login
     Given I open the SauceDemo login page
     When I login with username "performance_glitch_user" and password "secret_sauce"
     Then login should be "success"
+
+  @a11y @regression @login @no-retry
+  Scenario: Accessibility — login page meets WCAG 2.1 AA
+    Given I open the SauceDemo login page

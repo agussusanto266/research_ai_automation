@@ -33,23 +33,23 @@ Repo ini adalah **AI-driven QA automation pipeline**. Claude bertindak sebagai a
 
 Stack teknis:
 
-| Layer | Tool |
-|-------|------|
-| Language | TypeScript |
-| Browser automation | Playwright (library mode) |
-| Test runner | Cucumber.js BDD |
-| Locator strategy | Self-healing (`SelfHealingLocatorResolver`) |
-| Test management | Testmo (import via CSV) |
-| Reports | HTML + JSON + Allure |
+| Layer              | Tool                                        |
+| ------------------ | ------------------------------------------- |
+| Language           | TypeScript                                  |
+| Browser automation | Playwright (library mode)                   |
+| Test runner        | Cucumber.js BDD                             |
+| Locator strategy   | Self-healing (`SelfHealingLocatorResolver`) |
+| Test management    | Testmo (import via CSV)                     |
+| Reports            | HTML + JSON + Allure                        |
 
 ---
 
 ## 2. Prerequisites
 
-| Requirement | Version |
-|-------------|---------|
-| Node.js | >= 20 (cek dengan `node -v`) |
-| npm | >= 10 |
+| Requirement     | Version                                              |
+| --------------- | ---------------------------------------------------- |
+| Node.js         | >= 20 (cek dengan `node -v`)                         |
+| npm             | >= 10                                                |
 | Claude Code CLI | Terbaru (`npm install -g @anthropic-ai/claude-code`) |
 
 ---
@@ -188,6 +188,7 @@ App: saucedemo | Feature: cart
 ```
 
 Claude akan:
+
 1. Membuka URL tersebut
 2. Meng-inspect DOM (mencari `data-test`, `id`, `role`)
 3. Merancang test case menggunakan 5 teknik (EP, BVA, ST, DT, EG)
@@ -252,6 +253,7 @@ git diff
 ```
 
 Periksa:
+
 - Feature file: skenario sudah cover happy path (`@smoke`) dan edge case (`@regression`)?
 - POM: locator candidates pakai `data-test` sebagai prioritas pertama?
 - Step definitions: menggunakan `this.getPage(PageClass)` (bukan `new PageClass(...)`)?
@@ -299,22 +301,23 @@ cp .claude/apps/_TEMPLATE.md .claude/apps/[nama-app].md
 **2. Isi semua field di file tersebut:**
 
 ```markdown
-App Name    : nama-app
+App Name : nama-app
 Display Name: Nama Tampilan
-Base URL    : https://app.example.com
+Base URL : https://app.example.com
 
 Auth Required : yes / no
-Login URL     : https://app.example.com/login
+Login URL : https://app.example.com/login
 Test Accounts :
-  | Role    | Username | Password | Notes |
-  | admin   | admin    | pass123  | Full access |
+| Role | Username | Password | Notes |
+| admin | admin | pass123 | Full access |
 
 Pages / Modules:
-  | Page name | URL path | Notes |
-  | Login     | /login   | Form login |
+| Page name | URL path | Notes |
+| Login | /login | Form login |
 
 Known Quirks:
-  - Deskripsi bug atau keterbatasan yang perlu diketahui
+
+- Deskripsi bug atau keterbatasan yang perlu diketahui
 ```
 
 **3. Tambahkan env var di `config/env.ts`:**
@@ -356,8 +359,8 @@ import type { LocatorCandidate, LocatorUsage } from "../../utils/selfHealingLoca
 // Kandidat locator HARUS di module level (bukan di dalam class)
 const LOGIN_BUTTON_CANDIDATES: LocatorCandidate[] = [
   { name: "primary-testid", kind: "testId", value: "login-button" },
-  { name: "secondary-role", kind: "role",   role: "button", options: { name: /sign in/i } },
-  { name: "fallback-css",   kind: "css",    value: ".login-btn" },
+  { name: "secondary-role", kind: "role", role: "button", options: { name: /sign in/i } },
+  { name: "fallback-css", kind: "css", value: ".login-btn" },
 ];
 
 export class LoginPage extends BasePage {
@@ -382,6 +385,7 @@ export class LoginPage extends BasePage {
 ```
 
 **Aturan wajib:**
+
 - File selalu di `pages/[app]/`, **bukan** di `pages/` root (kecuali `BasePage.ts`)
 - Locator candidates: `const` di module level — **bukan** di dalam class atau method
 - Prioritas locator: `testId` → `id` → `role` → `label` → `css` → `xpath` (xpath hanya last resort)
@@ -403,13 +407,12 @@ Given("I open the login page", async function (this: CustomWorld) {
   await this.getPage(LoginPage).goto(env.baseUrl);
 });
 
-When("I login with {string} and {string}", async function (
-  this: CustomWorld,
-  username: string,
-  password: string
-) {
-  await this.getPage(LoginPage).login(username, password);
-});
+When(
+  "I login with {string} and {string}",
+  async function (this: CustomWorld, username: string, password: string) {
+    await this.getPage(LoginPage).login(username, password);
+  }
+);
 
 Then("I should be on the inventory page", async function (this: CustomWorld) {
   const isSuccess = await this.getPage(LoginPage).isLoginSuccessful();
@@ -418,6 +421,7 @@ Then("I should be on the inventory page", async function (this: CustomWorld) {
 ```
 
 **Aturan wajib:**
+
 - Selalu `this: CustomWorld` untuk type safety
 - Pakai `this.getPage(PageClass)` — factory otomatis handle lazy-init dan cache per scenario
 - **Tidak perlu** tambah property di `CustomWorld.ts` ketika buat Page class baru
@@ -426,26 +430,26 @@ Then("I should be on the inventory page", async function (this: CustomWorld) {
 
 ### Tags Gherkin
 
-| Tag | Kapan dipakai |
-|-----|---------------|
-| `@smoke` | Happy path — wajib untuk semua fitur |
-| `@regression` | Full suite termasuk edge case dan negative test |
-| `@sanity` | Test paling basic, hanya untuk verifikasi setup |
-| `@slow` | Scenario yang butuh timeout lebih lama (misal: `performance_glitch_user`) |
-| `@no-retry` | Jangan di-retry jika gagal (misal: test yang bersifat destructive) |
-| `@visual` | Scenario dengan visual regression screenshot compare |
-| `@a11y` | Scenario dengan accessibility (WCAG 2.1 AA) check |
+| Tag              | Kapan dipakai                                                                     |
+| ---------------- | --------------------------------------------------------------------------------- |
+| `@smoke`         | Happy path — wajib untuk semua fitur                                              |
+| `@regression`    | Full suite termasuk edge case dan negative test                                   |
+| `@sanity`        | Test paling basic, hanya untuk verifikasi setup                                   |
+| `@slow`          | Scenario yang butuh timeout lebih lama (misal: `performance_glitch_user`)         |
+| `@no-retry`      | Jangan di-retry jika gagal (misal: test yang bersifat destructive)                |
+| `@visual`        | Scenario dengan visual regression screenshot compare                              |
+| `@a11y`          | Scenario dengan accessibility (WCAG 2.1 AA) check                                 |
 | `@data-teardown` | Scenario yang perlu cleanup data — daftarkan via `world.registerDataTeardown(fn)` |
 
 ### Penamaan File
 
-| Artefak | Konvensi | Contoh |
-|---------|----------|--------|
-| Feature file | `features/[app]/[feature].feature` | `features/saucedemo/cart.feature` |
-| Page class | `pages/[app]/[PageName]Page.ts` | `pages/saucedemo/CartPage.ts` |
-| Step file | `step-definitions/[app]/[feature].steps.ts` | `step-definitions/saucedemo/cart.steps.ts` |
-| Locator array | `SCREAMING_SNAKE_CASE` | `ADD_TO_CART_CANDIDATES` |
-| Method | `camelCase`, verb-first | `addToCart()`, `getTotal()`, `isVisible()` |
+| Artefak       | Konvensi                                    | Contoh                                     |
+| ------------- | ------------------------------------------- | ------------------------------------------ |
+| Feature file  | `features/[app]/[feature].feature`          | `features/saucedemo/cart.feature`          |
+| Page class    | `pages/[app]/[PageName]Page.ts`             | `pages/saucedemo/CartPage.ts`              |
+| Step file     | `step-definitions/[app]/[feature].steps.ts` | `step-definitions/saucedemo/cart.steps.ts` |
+| Locator array | `SCREAMING_SNAKE_CASE`                      | `ADD_TO_CART_CANDIDATES`                   |
+| Method        | `camelCase`, verb-first                     | `addToCart()`, `getTotal()`, `isVisible()` |
 
 ---
 
@@ -560,6 +564,7 @@ Pipeline berjalan otomatis di GitHub Actions setiap push ke `main` atau `develop
 ### Test gagal: `locator.click: Element not found`
 
 Locator candidate tidak cocok dengan DOM. Langkah debug:
+
 1. Buka browser manual ke URL yang sama
 2. DevTools → inspect element → cari `data-test`, `id`, atau `role`
 3. Update `LocatorCandidate[]` di POM yang bersangkutan
@@ -573,6 +578,7 @@ npm run typecheck
 ```
 
 Yang sering terjadi:
+
 - Import path salah → periksa path ke `pages/[app]/PageName`
 - Method tidak ada di POM → sesuaikan nama method antara step definitions dan POM
 
@@ -598,10 +604,10 @@ git add -A && git commit -m "style: apply prettier formatting"
 
 ## Quick Reference — Prompt ke Claude
 
-| Situasi | Prompt yang dikirim ke Claude |
-|---------|-------------------------------|
-| Analisis PRD | `Mode 1 Path A: Analyze PRD at input/prd/[file].txt` |
-| Generate dari PRD yang APPROVED | `Mode 2 Path A: Generate test cases + Mode 3: Generate all automation artifacts` |
-| Eksplorasi halaman + generate semua | `Mode 2+3 Path B: Explore the [page] at [URL]` |
-| Otomasi dari CSV manual | `Mode 3C Path C: Generate automation from input/testcases/[file].csv` |
-| Cek coverage yang sudah ada | Tanyakan langsung: `What features are already automated for saucedemo?` |
+| Situasi                             | Prompt yang dikirim ke Claude                                                    |
+| ----------------------------------- | -------------------------------------------------------------------------------- |
+| Analisis PRD                        | `Mode 1 Path A: Analyze PRD at input/prd/[file].txt`                             |
+| Generate dari PRD yang APPROVED     | `Mode 2 Path A: Generate test cases + Mode 3: Generate all automation artifacts` |
+| Eksplorasi halaman + generate semua | `Mode 2+3 Path B: Explore the [page] at [URL]`                                   |
+| Otomasi dari CSV manual             | `Mode 3C Path C: Generate automation from input/testcases/[file].csv`            |
+| Cek coverage yang sudah ada         | Tanyakan langsung: `What features are already automated for saucedemo?`          |

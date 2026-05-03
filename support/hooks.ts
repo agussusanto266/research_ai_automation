@@ -73,6 +73,40 @@ After({ tags: "@slow" }, function () {
   setDefaultTimeout(30000);
 });
 
+// General browser teardown — registered BEFORE @visual/@a11y so that in Cucumber's
+// LIFO After-hook execution order it runs LAST, giving tagged hooks a live page.
+After(async function (this: CustomWorld, scenario) {
+  const elapsedSeconds = ((Date.now() - this.scenarioStartedAt) / 1000).toFixed(1);
+  console.log(
+    `[TEST] END ${scenario.result?.status ?? "UNKNOWN"} ${scenario.pickle.name} (${elapsedSeconds}s)`
+  );
+
+  if (scenario.result?.status === Status.FAILED) {
+    await fs.mkdir("reports", { recursive: true });
+    const safeScenario = scenario.pickle.name.replace(/[^a-z0-9]+/gi, "-").toLowerCase();
+    const diagnosticPath = `reports/diagnostics-${safeScenario}-${Date.now()}.log`;
+    const diagnostics = [
+      `scenario: ${scenario.pickle.name}`,
+      `status: ${scenario.result.status}`,
+      "",
+      "== Locator + scenario logs ==",
+      ...this.scenarioLogs,
+      "",
+      "== Browser console logs ==",
+      ...this.consoleLogs,
+    ].join("\n");
+    await fs.writeFile(diagnosticPath, diagnostics, "utf-8");
+  }
+
+  await SelfHealingLocatorResolver.flush(this.locatorUsages);
+  await this.page?.close();
+  await this.context?.close();
+  await this.browser?.close();
+});
+
+// @visual and @a11y After hooks registered AFTER the general teardown so they execute
+// BEFORE it in Cucumber's LIFO order, while the page is still open.
+
 After({ tags: "@visual" }, async function (this: CustomWorld, scenario) {
   if (!this.page) {
     return;
@@ -86,6 +120,24 @@ After({ tags: "@visual" }, async function (this: CustomWorld, scenario) {
       ` (${result.diffPercent.toFixed(2)}%)` +
       (result.diffPath ? `\nDiff saved: ${result.diffPath}` : "");
     throw new Error(msg);
+  }
+});
+
+After({ tags: "@a11y" }, async function (this: CustomWorld, scenario) {
+  if (!this.page) {
+    return;
+  }
+
+  const violations = await checkAccessibility(this.page);
+  if (violations.length > 0) {
+    await fs.mkdir("reports", { recursive: true });
+    const safeScenario = scenario.pickle.name.replace(/[^a-z0-9]+/gi, "-").toLowerCase();
+    const a11yPath = `reports/a11y-${safeScenario}-${Date.now()}.json`;
+    await fs.writeFile(a11yPath, JSON.stringify(violations, null, 2), "utf-8");
+    const summary = violations
+      .map((v) => `  [${v.impact ?? "unknown"}] ${v.id}: ${v.description} (${v.nodes} node(s))`)
+      .join("\n");
+    throw new Error(`Accessibility violations found:\n${summary}\nFull report: ${a11yPath}`);
   }
 });
 
@@ -117,51 +169,4 @@ AfterStep(async function (this: CustomWorld, { pickleStep, result }) {
       fullPage: true,
     });
   }
-});
-
-After({ tags: "@a11y" }, async function (this: CustomWorld, scenario) {
-  if (!this.page) {
-    return;
-  }
-
-  const violations = await checkAccessibility(this.page);
-  if (violations.length > 0) {
-    await fs.mkdir("reports", { recursive: true });
-    const safeScenario = scenario.pickle.name.replace(/[^a-z0-9]+/gi, "-").toLowerCase();
-    const a11yPath = `reports/a11y-${safeScenario}-${Date.now()}.json`;
-    await fs.writeFile(a11yPath, JSON.stringify(violations, null, 2), "utf-8");
-    const summary = violations
-      .map((v) => `  [${v.impact ?? "unknown"}] ${v.id}: ${v.description} (${v.nodes} node(s))`)
-      .join("\n");
-    throw new Error(`Accessibility violations found:\n${summary}\nFull report: ${a11yPath}`);
-  }
-});
-
-After(async function (this: CustomWorld, scenario) {
-  const elapsedSeconds = ((Date.now() - this.scenarioStartedAt) / 1000).toFixed(1);
-  console.log(
-    `[TEST] END ${scenario.result?.status ?? "UNKNOWN"} ${scenario.pickle.name} (${elapsedSeconds}s)`
-  );
-
-  if (scenario.result?.status === Status.FAILED) {
-    await fs.mkdir("reports", { recursive: true });
-    const safeScenario = scenario.pickle.name.replace(/[^a-z0-9]+/gi, "-").toLowerCase();
-    const diagnosticPath = `reports/diagnostics-${safeScenario}-${Date.now()}.log`;
-    const diagnostics = [
-      `scenario: ${scenario.pickle.name}`,
-      `status: ${scenario.result.status}`,
-      "",
-      "== Locator + scenario logs ==",
-      ...this.scenarioLogs,
-      "",
-      "== Browser console logs ==",
-      ...this.consoleLogs,
-    ].join("\n");
-    await fs.writeFile(diagnosticPath, diagnostics, "utf-8");
-  }
-
-  await SelfHealingLocatorResolver.flush(this.locatorUsages);
-  await this.page?.close();
-  await this.context?.close();
-  await this.browser?.close();
 });

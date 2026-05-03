@@ -35,6 +35,7 @@ Thumbs.db
 
 # Claude Code local settings (machine-specific, not shared)
 .claude/settings.local.json
+.claude/scheduled_tasks.lock
 
 # Local reference / planning docs (not part of codebase)
 claude_md_flow_diagram_en.html

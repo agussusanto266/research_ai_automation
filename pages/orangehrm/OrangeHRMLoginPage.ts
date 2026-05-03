@@ -95,8 +95,13 @@ export class OrangeHRMLoginPage extends BasePage {
   }
 
   async navigateToDashboard(baseUrl: string): Promise<void> {
-    await this.page.goto(`${baseUrl}/web/index.php/dashboard/index`, {
-      waitUntil: "domcontentloaded",
-    });
+    // ERR_ABORTED is expected when the server redirects unauthenticated requests;
+    // the redirect still lands on the login page, so ignore it and let the
+    // subsequent assertion step verify the URL.
+    await this.page
+      .goto(`${baseUrl}/web/index.php/dashboard/index`, { waitUntil: "domcontentloaded" })
+      .catch((err: Error) => {
+        if (!err.message.includes("ERR_ABORTED")) throw err;
+      });
   }
 }

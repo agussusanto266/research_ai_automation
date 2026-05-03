@@ -35,10 +35,10 @@ npm run test:regression # full regression
 
 Pilih path sesuai yang kamu punya:
 
-| Path | Kapan pakai | Prompt ke Claude |
-|------|-------------|-----------------|
-| **A** | Punya PRD | `Mode 1 Path A: Analyze PRD at input/prd/[file].txt` |
-| **B** | Punya URL, tidak ada PRD | `Mode 2+3 Path B: Explore the [page] at [URL]` |
+| Path  | Kapan pakai                  | Prompt ke Claude                                                      |
+| ----- | ---------------------------- | --------------------------------------------------------------------- |
+| **A** | Punya PRD                    | `Mode 1 Path A: Analyze PRD at input/prd/[file].txt`                  |
+| **B** | Punya URL, tidak ada PRD     | `Mode 2+3 Path B: Explore the [page] at [URL]`                        |
 | **C** | Punya test case manual (CSV) | `Mode 3C Path C: Generate automation from input/testcases/[file].csv` |
 
 Detail setiap path, konvensi kode, dan troubleshooting → [framework_setup.md](framework_setup.md)
@@ -86,10 +86,10 @@ Variables (per environment): `BASE_URL`, `ORANGEHRM_BASE_URL`, `TODOMVC_BASE_URL
 
 ## Team Reference
 
-| File | Isi |
-|------|-----|
-| [framework_setup.md](framework_setup.md) | Panduan lengkap: setup, generate, konvensi, troubleshooting |
-| [.claude/CONVENTIONS.md](.claude/CONVENTIONS.md) | Standar kode POM + step definitions |
-| [.claude/PIPELINE.md](.claude/PIPELINE.md) | Detail teknis setiap mode pipeline |
-| [.claude/apps/saucedemo.md](.claude/apps/saucedemo.md) | Config SauceDemo: URL, credentials, coverage |
-| [.claude/apps/_TEMPLATE.md](.claude/apps/_TEMPLATE.md) | Template untuk mendaftarkan app baru |
+| File                                                    | Isi                                                         |
+| ------------------------------------------------------- | ----------------------------------------------------------- |
+| [framework_setup.md](framework_setup.md)                | Panduan lengkap: setup, generate, konvensi, troubleshooting |
+| [.claude/CONVENTIONS.md](.claude/CONVENTIONS.md)        | Standar kode POM + step definitions                         |
+| [.claude/PIPELINE.md](.claude/PIPELINE.md)              | Detail teknis setiap mode pipeline                          |
+| [.claude/apps/saucedemo.md](.claude/apps/saucedemo.md)  | Config SauceDemo: URL, credentials, coverage                |
+| [.claude/apps/\_TEMPLATE.md](.claude/apps/_TEMPLATE.md) | Template untuk mendaftarkan app baru                        |
