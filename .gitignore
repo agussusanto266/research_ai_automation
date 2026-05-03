@@ -38,7 +38,6 @@ Thumbs.db
 
 # Local reference / planning docs (not part of codebase)
 claude_md_flow_diagram_en.html
-framework_setup.md
 generate_testscript.md
 
 # Generated staging output — auto-created by pipeline, not source code
