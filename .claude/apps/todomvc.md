@@ -24,30 +24,30 @@ Auth Type     : none
 
 ## Pages / Modules
 
-| Page name    | URL path | Notes                                                 |
-|--------------|----------|-------------------------------------------------------|
-| Todo List    | `/`      | Main page — add, complete, delete, filter todos       |
-| Active view  | `/#/active`    | Filtered view — active todos only               |
-| Completed view | `/#/completed` | Filtered view — completed todos only          |
+| Page name      | URL path       | Notes                                           |
+| -------------- | -------------- | ----------------------------------------------- |
+| Todo List      | `/`            | Main page — add, complete, delete, filter todos |
+| Active view    | `/#/active`    | Filtered view — active todos only               |
+| Completed view | `/#/completed` | Filtered view — completed todos only            |
 
 ---
 
 ## Key UI Elements & Locators
 
-| Element              | Selector                          | Notes                                      |
-|----------------------|-----------------------------------|--------------------------------------------|
-| New todo input       | `.new-todo`                       | Press Enter to add                         |
-| Todo item row        | `.todo-list li`                   | One per item                               |
-| Todo label           | `.todo-list li label`             | Displays item text                         |
-| Complete checkbox    | `.todo-list li .toggle`           | Click to toggle complete/active            |
-| Delete button        | `.todo-list li button.destroy`    | Visible on hover                           |
-| Footer               | `footer.footer`                   | Hidden when list is empty                  |
-| Remaining count      | `.todo-count`                     | e.g. "1 item left", "2 items left"         |
-| Count number         | `.todo-count strong`              | Number only                                |
-| Filter All           | `a[href="#/"]`                    | Default active filter                      |
-| Filter Active        | `a[href="#/active"]`              | Shows only uncompleted                     |
-| Filter Completed     | `a[href="#/completed"]`           | Shows only completed                       |
-| Clear completed btn  | `.clear-completed`                | Visible only when ≥1 completed item exists |
+| Element             | Selector                       | Notes                                      |
+| ------------------- | ------------------------------ | ------------------------------------------ |
+| New todo input      | `.new-todo`                    | Press Enter to add                         |
+| Todo item row       | `.todo-list li`                | One per item                               |
+| Todo label          | `.todo-list li label`          | Displays item text                         |
+| Complete checkbox   | `.todo-list li .toggle`        | Click to toggle complete/active            |
+| Delete button       | `.todo-list li button.destroy` | Visible on hover                           |
+| Footer              | `footer.footer`                | Hidden when list is empty                  |
+| Remaining count     | `.todo-count`                  | e.g. "1 item left", "2 items left"         |
+| Count number        | `.todo-count strong`           | Number only                                |
+| Filter All          | `a[href="#/"]`                 | Default active filter                      |
+| Filter Active       | `a[href="#/active"]`           | Shows only uncompleted                     |
+| Filter Completed    | `a[href="#/completed"]`        | Shows only completed                       |
+| Clear completed btn | `.clear-completed`             | Visible only when ≥1 completed item exists |
 
 ---
 
@@ -65,14 +65,14 @@ Auth Type     : none
 
 ## Existing Automation Coverage
 
-| Feature      | Feature file                     | Step definitions                              | POM                  |
-|--------------|----------------------------------|-----------------------------------------------|----------------------|
-| Todo         | `features/todomvc/todo.feature`  | `step-definitions/todomvc/todo.steps.ts`      | `pages/TodoPage.ts`  |
+| Feature | Feature file                    | Step definitions                         | POM                 |
+| ------- | ------------------------------- | ---------------------------------------- | ------------------- |
+| Todo    | `features/todomvc/todo.feature` | `step-definitions/todomvc/todo.steps.ts` | `pages/TodoPage.ts` |
 
 ---
 
 ## Changelog
 
 | Date       | Change         |
-|------------|----------------|
+| ---------- | -------------- |
 | 2026-05-02 | Initial config |

@@ -1,59 +1,59 @@
 import type { Page } from "playwright";
-import { BasePage } from "./BasePage";
-import type { LocatorCandidate, LocatorUsage } from "../utils/selfHealingLocator";
+import { BasePage } from "../BasePage";
+import type { LocatorCandidate, LocatorUsage } from "../../utils/selfHealingLocator";
 
 const FIRST_NAME_CANDIDATES: LocatorCandidate[] = [
   { name: "primary-testid", kind: "testId", value: "firstName" },
-  { name: "fallback-css",   kind: "css",    value: "[data-test='firstName']" }
+  { name: "fallback-css", kind: "css", value: "[data-test='firstName']" },
 ];
 
 const LAST_NAME_CANDIDATES: LocatorCandidate[] = [
   { name: "primary-testid", kind: "testId", value: "lastName" },
-  { name: "fallback-css",   kind: "css",    value: "[data-test='lastName']" }
+  { name: "fallback-css", kind: "css", value: "[data-test='lastName']" },
 ];
 
 const ZIP_CANDIDATES: LocatorCandidate[] = [
   { name: "primary-testid", kind: "testId", value: "postalCode" },
-  { name: "fallback-css",   kind: "css",    value: "[data-test='postalCode']" }
+  { name: "fallback-css", kind: "css", value: "[data-test='postalCode']" },
 ];
 
 const CONTINUE_CANDIDATES: LocatorCandidate[] = [
   { name: "primary-testid", kind: "testId", value: "continue" },
-  { name: "secondary-role", kind: "role",   role: "button", options: { name: "Continue" } },
-  { name: "fallback-css",   kind: "css",    value: "[data-test='continue']" }
+  { name: "secondary-role", kind: "role", role: "button", options: { name: "Continue" } },
+  { name: "fallback-css", kind: "css", value: "[data-test='continue']" },
 ];
 
 const CANCEL_CANDIDATES: LocatorCandidate[] = [
   { name: "primary-testid", kind: "testId", value: "cancel" },
-  { name: "secondary-role", kind: "role",   role: "button", options: { name: "Cancel" } },
-  { name: "fallback-css",   kind: "css",    value: "[data-test='cancel']" }
+  { name: "secondary-role", kind: "role", role: "button", options: { name: "Cancel" } },
+  { name: "fallback-css", kind: "css", value: "[data-test='cancel']" },
 ];
 
 const STEP1_ERROR_CANDIDATES: LocatorCandidate[] = [
-  { name: "primary-testid",   kind: "testId", value: "error" },
-  { name: "secondary-css",    kind: "css",    value: "[data-test='error']" },
-  { name: "fallback-role",    kind: "role",   role: "heading" }
+  { name: "primary-testid", kind: "testId", value: "error" },
+  { name: "secondary-css", kind: "css", value: "[data-test='error']" },
+  { name: "fallback-role", kind: "role", role: "heading" },
 ];
 
 const FINISH_CANDIDATES: LocatorCandidate[] = [
   { name: "primary-testid", kind: "testId", value: "finish" },
-  { name: "secondary-role", kind: "role",   role: "button", options: { name: "Finish" } },
-  { name: "fallback-css",   kind: "css",    value: "[data-test='finish']" }
+  { name: "secondary-role", kind: "role", role: "button", options: { name: "Finish" } },
+  { name: "fallback-css", kind: "css", value: "[data-test='finish']" },
 ];
 
 const SUBTOTAL_CANDIDATES: LocatorCandidate[] = [
   { name: "primary-testid", kind: "testId", value: "subtotal-label" },
-  { name: "fallback-css",   kind: "css",    value: ".summary_subtotal_label" }
+  { name: "fallback-css", kind: "css", value: ".summary_subtotal_label" },
 ];
 
 const TAX_CANDIDATES: LocatorCandidate[] = [
   { name: "primary-testid", kind: "testId", value: "tax-label" },
-  { name: "fallback-css",   kind: "css",    value: ".summary_tax_label" }
+  { name: "fallback-css", kind: "css", value: ".summary_tax_label" },
 ];
 
 const TOTAL_CANDIDATES: LocatorCandidate[] = [
   { name: "primary-testid", kind: "testId", value: "total-label" },
-  { name: "fallback-css",   kind: "css",    value: ".summary_total_label" }
+  { name: "fallback-css", kind: "css", value: ".summary_total_label" },
 ];
 
 export class CheckoutPage extends BasePage {

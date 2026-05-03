@@ -1,6 +1,7 @@
-import dotenv from "dotenv";
-dotenv.config();
-
+// dotenv is loaded once by config/env.ts — never re-load here.
+// In CI, SAUCEDEMO_PASSWORD must be set as a secret. The fallback is only
+// used in local development; if it's ever missing in CI the assertion in
+// auth.steps.ts catches it at test time.
 export const SAUCEDEMO_PASSWORD = process.env.SAUCEDEMO_PASSWORD ?? "secret_sauce";
 
 export const SAUCEDEMO_USERS: Record<string, string> = {

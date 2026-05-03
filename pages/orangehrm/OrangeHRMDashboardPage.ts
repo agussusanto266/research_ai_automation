@@ -1,16 +1,16 @@
 import type { Page } from "playwright";
-import { BasePage } from "./BasePage";
-import type { LocatorCandidate, LocatorUsage } from "../utils/selfHealingLocator";
+import { BasePage } from "../BasePage";
+import type { LocatorCandidate, LocatorUsage } from "../../utils/selfHealingLocator";
 
 const DASHBOARD_HEADING_CANDIDATES: LocatorCandidate[] = [
-  { name: "primary-css",   kind: "css",   value: ".oxd-topbar-header-breadcrumb h6" },
-  { name: "secondary-css", kind: "css",   value: ".oxd-topbar-header--title" },
-  { name: "fallback-xpath",kind: "xpath", value: "//h6[contains(@class,'oxd-topbar-header')]" }
+  { name: "primary-css", kind: "css", value: ".oxd-topbar-header-breadcrumb h6" },
+  { name: "secondary-css", kind: "css", value: ".oxd-topbar-header--title" },
+  { name: "fallback-xpath", kind: "xpath", value: "//h6[contains(@class,'oxd-topbar-header')]" },
 ];
 
 const NAV_MENU_CANDIDATES: LocatorCandidate[] = [
-  { name: "primary-css",   kind: "css",   value: ".oxd-main-menu" },
-  { name: "fallback-xpath",kind: "xpath", value: "//*[contains(@class,'oxd-main-menu')]" }
+  { name: "primary-css", kind: "css", value: ".oxd-main-menu" },
+  { name: "fallback-xpath", kind: "xpath", value: "//*[contains(@class,'oxd-main-menu')]" },
 ];
 
 export class OrangeHRMDashboardPage extends BasePage {
@@ -18,7 +18,7 @@ export class OrangeHRMDashboardPage extends BasePage {
     super(page, scenarioLogs, locatorUsages);
   }
 
-  async goto(baseUrl: string): Promise<void> {
+  override async goto(baseUrl: string): Promise<void> {
     await this.page.goto(`${baseUrl}/web/index.php/dashboard/index`, { waitUntil: "networkidle" });
     await this.page.waitForURL(/dashboard\/index/);
   }
@@ -38,8 +38,10 @@ export class OrangeHRMDashboardPage extends BasePage {
   }
 
   async getNavItemNames(): Promise<string[]> {
-    // Wait for at least one item to render before snapshotting all text
-    await this.page.locator("span.oxd-main-menu-item--name").first().waitFor({ state: "visible", timeout: 10000 });
+    await this.page
+      .locator("span.oxd-main-menu-item--name")
+      .first()
+      .waitFor({ state: "visible", timeout: 10000 });
     return this.page.locator("span.oxd-main-menu-item--name").allTextContents();
   }
 

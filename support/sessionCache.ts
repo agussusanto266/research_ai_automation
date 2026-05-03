@@ -1,4 +1,4 @@
-import { chromium, firefox, selectors, webkit } from "playwright";
+import { chromium, firefox, webkit } from "playwright";
 import type { BrowserContext } from "playwright";
 import { env } from "../config/env";
 import { SAUCEDEMO_USERS } from "../test-data/saucedemo-users";
@@ -8,20 +8,20 @@ type StorageState = Awaited<ReturnType<BrowserContext["storageState"]>>;
 // Module-level cache: each Cucumber worker is a separate Node process,
 // so this map is per-worker. First scenario per user pays the login cost;
 // subsequent scenarios in the same worker inject the cached state directly.
-const cache  = new Map<string, StorageState | null>();
+const cache = new Map<string, StorageState | null>();
 const pending = new Map<string, Promise<StorageState | null>>();
-
-selectors.setTestIdAttribute("data-test");
+// Note: selectors.setTestIdAttribute is set once in CustomWorld.ts — not here.
 
 async function buildSession(username: string): Promise<StorageState | null> {
   const password = SAUCEDEMO_USERS[username];
   if (!password) return null;
 
-  const browserType = env.browser === "firefox" ? firefox : env.browser === "webkit" ? webkit : chromium;
+  const browserType =
+    env.browser === "firefox" ? firefox : env.browser === "webkit" ? webkit : chromium;
   const browser = await browserType.launch({ headless: env.headless });
   try {
     const context = await browser.newContext();
-    const page    = await context.newPage();
+    const page = await context.newPage();
 
     await page.goto(env.baseUrl, { waitUntil: "domcontentloaded", timeout: 30000 });
     await page.getByTestId("username").fill(username, { timeout: 10000 });
@@ -55,7 +55,7 @@ export async function getSessionState(username: string): Promise<StorageState | 
   if (!pending.has(username)) {
     const promise = buildSession(username)
       .then((state) => {
-        cache.set(username, state);  // cache null too — avoids retrying on every scenario
+        cache.set(username, state); // cache null too — avoids retrying on every scenario
         pending.delete(username);
         return state;
       })

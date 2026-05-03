@@ -8,7 +8,7 @@
 ## When the Protocol Is Active vs Skipped
 
 **Active** — user starts a session without explicitly specifying a path or inputs.
-Example triggers: *"start"*, *"generate test cases"*, *"help me with testing"*
+Example triggers: _"start"_, _"generate test cases"_, _"help me with testing"_
 
 **Skipped (skip steps 1–2)** — user has already provided the path and all required inputs in one message.
 Example: `"Mode 1 Path A: Analyze the following PRD [...]"` → go directly to step 3.
@@ -41,30 +41,30 @@ Validate all fields below before continuing. If any are missing → ask one by o
 
 ### Path A — PRD
 
-| Input | Format | Status |
-|---|---|---|
-| Target app | App name — immediately load `.claude/apps/[app].md` | Required first |
-| PRD | File at `input/prd/[filename]` or pasted in chat | Required |
-| Feature name | Short string — `login`, `checkout`, `cart` | Required |
+| Input        | Format                                              | Status         |
+| ------------ | --------------------------------------------------- | -------------- |
+| Target app   | App name — immediately load `.claude/apps/[app].md` | Required first |
+| PRD          | File at `input/prd/[filename]` or pasted in chat    | Required       |
+| Feature name | Short string — `login`, `checkout`, `cart`          | Required       |
 
 > If PRD is pasted in chat → save to `input/prd/[feature]_[YYYY-MM-DD].txt` before continuing.
 
 ### Path B — Exploratory
 
-| Input | Format | Status |
-|---|---|---|
-| Target app | App name — immediately load `.claude/apps/[app].md` | Required first |
-| Target URL | Full URL of the page to explore | Required |
-| Feature name | Short string | Required |
-| Credentials | username + password | Required if auth needed — pull from `apps/[app].md` if available |
+| Input        | Format                                              | Status                                                           |
+| ------------ | --------------------------------------------------- | ---------------------------------------------------------------- |
+| Target app   | App name — immediately load `.claude/apps/[app].md` | Required first                                                   |
+| Target URL   | Full URL of the page to explore                     | Required                                                         |
+| Feature name | Short string                                        | Required                                                         |
+| Credentials  | username + password                                 | Required if auth needed — pull from `apps/[app].md` if available |
 
 ### Path C — Manual Test Case
 
-| Input | Format | Status |
-|---|---|---|
-| Target app | App name — immediately load `.claude/apps/[app].md` | Required first |
-| CSV file path | `input/testcases/[filename].csv` | Required — file must already exist |
-| Target URL | URL of the page covered by these test cases | Required — for locator identification |
+| Input         | Format                                              | Status                                |
+| ------------- | --------------------------------------------------- | ------------------------------------- |
+| Target app    | App name — immediately load `.claude/apps/[app].md` | Required first                        |
+| CSV file path | `input/testcases/[filename].csv`                    | Required — file must already exist    |
+| Target URL    | URL of the page covered by these test cases         | Required — for locator identification |
 
 > If CSV file does not yet exist in `input/testcases/` → ask the user to upload it first, do not continue.
 
@@ -93,11 +93,11 @@ Summary before starting:
 Proceed? (yes / no / change)
 ```
 
-| Answer | Action |
-|---|---|
-| `yes` | Execute pipeline per `PIPELINE.md` (apps/[app].md already read in Step 2) |
-| `no` | Stop, ask what the user wants to change |
-| `change` | Return to the relevant step |
+| Answer   | Action                                                                    |
+| -------- | ------------------------------------------------------------------------- |
+| `yes`    | Execute pipeline per `PIPELINE.md` (apps/[app].md already read in Step 2) |
+| `no`     | Stop, ask what the user wants to change                                   |
+| `change` | Return to the relevant step                                               |
 
 ---
 

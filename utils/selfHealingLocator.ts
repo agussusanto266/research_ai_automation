@@ -6,7 +6,12 @@ import { env } from "../config/env";
 export type LocatorCandidate =
   | { name: string; kind: "testId"; value: string }
   | { name: string; kind: "id"; value: string }
-  | { name: string; kind: "role"; role: Parameters<Page["getByRole"]>[0]; options?: Parameters<Page["getByRole"]>[1] }
+  | {
+      name: string;
+      kind: "role";
+      role: Parameters<Page["getByRole"]>[0];
+      options?: Parameters<Page["getByRole"]>[1];
+    }
   | { name: string; kind: "label"; value: string }
   | { name: string; kind: "text"; value: string }
   | { name: string; kind: "css"; value: string }
@@ -51,7 +56,7 @@ export class SelfHealingLocatorResolver {
           candidateName: candidate.name,
           kind: candidate.kind,
           value: this.describeCandidate(candidate),
-          at: new Date().toISOString()
+          at: new Date().toISOString(),
         };
         this.runtimeUsage.push(usage);
         this.sharedUsages.push(usage);
@@ -77,7 +82,7 @@ export class SelfHealingLocatorResolver {
     const toWrite = usages.splice(0);
 
     await fs.mkdir(path.dirname(HISTORY_PATH), { recursive: true });
-    let current: LocatorHistory = {};
+    let current: LocatorHistory;
     try {
       const existing = await fs.readFile(HISTORY_PATH, "utf-8");
       current = JSON.parse(existing) as LocatorHistory;

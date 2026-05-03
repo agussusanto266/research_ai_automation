@@ -1,39 +1,39 @@
 import type { Page } from "playwright";
-import { BasePage } from "./BasePage";
-import type { LocatorCandidate, LocatorUsage } from "../utils/selfHealingLocator";
+import { BasePage } from "../BasePage";
+import type { LocatorCandidate, LocatorUsage } from "../../utils/selfHealingLocator";
 
 const BACK_BUTTON_CANDIDATES: LocatorCandidate[] = [
   { name: "primary-testid", kind: "testId", value: "back-to-products" },
   { name: "secondary-css", kind: "css", value: "[data-test='back-to-products']" },
-  { name: "fallback-role", kind: "role", role: "button", options: { name: "Back to products" } }
+  { name: "fallback-role", kind: "role", role: "button", options: { name: "Back to products" } },
 ];
 
 const PRODUCT_NAME_CANDIDATES: LocatorCandidate[] = [
   { name: "primary-testid", kind: "testId", value: "inventory-item-name" },
   { name: "secondary-css", kind: "css", value: "[data-test='inventory-item-name']" },
-  { name: "fallback-css", kind: "css", value: ".inventory_details_name" }
+  { name: "fallback-css", kind: "css", value: ".inventory_details_name" },
 ];
 
 const PRODUCT_DESC_CANDIDATES: LocatorCandidate[] = [
   { name: "primary-testid", kind: "testId", value: "inventory-item-desc" },
   { name: "secondary-css", kind: "css", value: "[data-test='inventory-item-desc']" },
-  { name: "fallback-css", kind: "css", value: ".inventory_details_desc" }
+  { name: "fallback-css", kind: "css", value: ".inventory_details_desc" },
 ];
 
 const PRODUCT_PRICE_CANDIDATES: LocatorCandidate[] = [
   { name: "primary-testid", kind: "testId", value: "inventory-item-price" },
   { name: "secondary-css", kind: "css", value: "[data-test='inventory-item-price']" },
-  { name: "fallback-css", kind: "css", value: ".inventory_details_price" }
+  { name: "fallback-css", kind: "css", value: ".inventory_details_price" },
 ];
 
 const ADD_TO_CART_CANDIDATES: LocatorCandidate[] = [
   { name: "primary-role", kind: "role", role: "button", options: { name: "Add to cart" } },
-  { name: "fallback-css", kind: "css", value: "[data-test^='add-to-cart']" }
+  { name: "fallback-css", kind: "css", value: "[data-test^='add-to-cart']" },
 ];
 
 const REMOVE_CANDIDATES: LocatorCandidate[] = [
   { name: "primary-role", kind: "role", role: "button", options: { name: "Remove" } },
-  { name: "fallback-css", kind: "css", value: "[data-test^='remove']" }
+  { name: "fallback-css", kind: "css", value: "[data-test^='remove']" },
 ];
 
 export class ProductDetailPage extends BasePage {
@@ -41,8 +41,11 @@ export class ProductDetailPage extends BasePage {
     super(page, scenarioLogs, locatorUsages);
   }
 
-  async goto(baseUrl: string, productId: number): Promise<void> {
-    await this.page.goto(`${baseUrl}inventory-item.html?id=${productId}`, { waitUntil: "domcontentloaded" });
+  // Product detail always needs an ID — separate method from BasePage.goto()
+  async gotoProduct(baseUrl: string, productId: number): Promise<void> {
+    await this.page.goto(`${baseUrl}inventory-item.html?id=${productId}`, {
+      waitUntil: "domcontentloaded",
+    });
   }
 
   async getProductName(): Promise<string> {

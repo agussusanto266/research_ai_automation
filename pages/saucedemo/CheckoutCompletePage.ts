@@ -1,34 +1,44 @@
 import type { Page } from "playwright";
-import { BasePage } from "./BasePage";
-import type { LocatorCandidate, LocatorUsage } from "../utils/selfHealingLocator";
+import { BasePage } from "../BasePage";
+import type { LocatorCandidate, LocatorUsage } from "../../utils/selfHealingLocator";
 
 const PAGE_TITLE_CANDIDATES: LocatorCandidate[] = [
   { name: "primary-testid", kind: "testId", value: "title" },
-  { name: "secondary-role", kind: "role", role: "heading", options: { name: "Checkout: Complete!" } },
-  { name: "fallback-css", kind: "css", value: ".title" }
+  {
+    name: "secondary-role",
+    kind: "role",
+    role: "heading",
+    options: { name: "Checkout: Complete!" },
+  },
+  { name: "fallback-css", kind: "css", value: ".title" },
 ];
 
 const COMPLETE_HEADER_CANDIDATES: LocatorCandidate[] = [
   { name: "primary-testid", kind: "testId", value: "complete-header" },
   { name: "secondary-css", kind: "css", value: ".complete-header" },
-  { name: "fallback-role", kind: "role", role: "heading", options: { name: "Thank you for your order!" } }
+  {
+    name: "fallback-role",
+    kind: "role",
+    role: "heading",
+    options: { name: "Thank you for your order!" },
+  },
 ];
 
 const COMPLETE_TEXT_CANDIDATES: LocatorCandidate[] = [
   { name: "primary-testid", kind: "testId", value: "complete-text" },
-  { name: "fallback-css", kind: "css", value: ".complete-text" }
+  { name: "fallback-css", kind: "css", value: ".complete-text" },
 ];
 
 const PONY_IMAGE_CANDIDATES: LocatorCandidate[] = [
   { name: "primary-testid", kind: "testId", value: "pony-express" },
   { name: "secondary-role", kind: "role", role: "img", options: { name: "Pony Express" } },
-  { name: "fallback-css", kind: "css", value: "[data-test='checkout-complete-container'] img" }
+  { name: "fallback-css", kind: "css", value: "[data-test='checkout-complete-container'] img" },
 ];
 
 const BACK_HOME_CANDIDATES: LocatorCandidate[] = [
   { name: "primary-testid", kind: "testId", value: "back-to-products" },
   { name: "secondary-role", kind: "role", role: "button", options: { name: "Back Home" } },
-  { name: "fallback-css", kind: "css", value: "#back-to-products" }
+  { name: "fallback-css", kind: "css", value: "#back-to-products" },
 ];
 
 export class CheckoutCompletePage extends BasePage {
@@ -36,7 +46,7 @@ export class CheckoutCompletePage extends BasePage {
     super(page, scenarioLogs, locatorUsages);
   }
 
-  async goto(baseUrl: string): Promise<void> {
+  override async goto(baseUrl: string): Promise<void> {
     await this.page.goto(`${baseUrl}checkout-complete.html`, { waitUntil: "domcontentloaded" });
   }
 

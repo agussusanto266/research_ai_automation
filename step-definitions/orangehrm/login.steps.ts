@@ -1,20 +1,18 @@
 import { Given, When, Then } from "@cucumber/cucumber";
 import assert from "node:assert";
 import { env } from "../../config/env";
-import { OrangeHRMLoginPage } from "../../pages/OrangeHRMLoginPage";
+import { OrangeHRMLoginPage } from "../../pages/orangehrm/OrangeHRMLoginPage";
 import { CustomWorld } from "../../support/CustomWorld";
 
 Given("I am on the OrangeHRM login page", async function (this: CustomWorld) {
-  this.orangehrmLoginPage = new OrangeHRMLoginPage(this.page, this.scenarioLogs, this.locatorUsages);
-  await this.orangehrmLoginPage.goto(env.orangehrmBaseUrl);
+  await this.getPage(OrangeHRMLoginPage).goto(env.orangehrmBaseUrl);
 });
 
 When(
   "I sign in with username {string} and password {string}",
   { timeout: 60000 },
   async function (this: CustomWorld, username: string, password: string) {
-    assert.ok(this.orangehrmLoginPage, "OrangeHRMLoginPage is not initialized");
-    await this.orangehrmLoginPage.signIn(username, password);
+    await this.getPage(OrangeHRMLoginPage).signIn(username, password);
   }
 );
 
@@ -22,8 +20,7 @@ Then(
   "the OrangeHRM login result should be {string}",
   { timeout: 60000 },
   async function (this: CustomWorld, expectedOutcome: string) {
-    assert.ok(this.orangehrmLoginPage, "OrangeHRMLoginPage is not initialized");
-    const successful = await this.orangehrmLoginPage.isLoginSuccessful();
+    const successful = await this.getPage(OrangeHRMLoginPage).isLoginSuccessful();
 
     if (expectedOutcome === "success") {
       assert.ok(successful, `Expected successful login but URL is ${this.page.url()}`);
@@ -37,8 +34,7 @@ Then(
 Then(
   "I should see an OrangeHRM error containing {string}",
   async function (this: CustomWorld, expectedText: string) {
-    assert.ok(this.orangehrmLoginPage, "OrangeHRMLoginPage is not initialized");
-    const errorText = await this.orangehrmLoginPage.getAnyErrorText();
+    const errorText = await this.getPage(OrangeHRMLoginPage).getAnyErrorText();
     assert.match(
       errorText,
       new RegExp(expectedText.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i"),
@@ -48,14 +44,12 @@ Then(
 );
 
 Then("the OrangeHRM login form should still be visible", async function (this: CustomWorld) {
-  assert.ok(this.orangehrmLoginPage, "OrangeHRMLoginPage is not initialized");
-  const visible = await this.orangehrmLoginPage.isFormVisible();
+  const visible = await this.getPage(OrangeHRMLoginPage).isFormVisible();
   assert.ok(visible, "Expected login form to be visible but it was not");
 });
 
 When("I click the forgot password link", async function (this: CustomWorld) {
-  assert.ok(this.orangehrmLoginPage, "OrangeHRMLoginPage is not initialized");
-  await this.orangehrmLoginPage.clickForgotPassword();
+  await this.getPage(OrangeHRMLoginPage).clickForgotPassword();
 });
 
 Then("I should be on the OrangeHRM password reset page", async function (this: CustomWorld) {
@@ -68,8 +62,7 @@ Then("I should be on the OrangeHRM password reset page", async function (this: C
 });
 
 When("I navigate directly to the OrangeHRM dashboard", async function (this: CustomWorld) {
-  assert.ok(this.orangehrmLoginPage, "OrangeHRMLoginPage is not initialized");
-  await this.orangehrmLoginPage.navigateToDashboard(env.orangehrmBaseUrl);
+  await this.getPage(OrangeHRMLoginPage).navigateToDashboard(env.orangehrmBaseUrl);
 });
 
 Then("I should be redirected to the OrangeHRM login page", async function (this: CustomWorld) {

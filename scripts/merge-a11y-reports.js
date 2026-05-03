@@ -1,6 +1,6 @@
 // Aggregates per-scenario a11y-*.json reports into a single WCAG compliance summary.
 // Run after every test execution: npm run merge:a11y
-const fs   = require("fs");
+const fs = require("fs");
 const path = require("path");
 
 const reportsDir = path.resolve(__dirname, "..", "reports");
@@ -10,7 +10,8 @@ if (!fs.existsSync(reportsDir)) {
   process.exit(0);
 }
 
-const a11yFiles = fs.readdirSync(reportsDir)
+const a11yFiles = fs
+  .readdirSync(reportsDir)
   .filter((f) => /^a11y-.*\.json$/.test(f))
   .map((f) => path.join(reportsDir, f));
 
@@ -20,13 +21,17 @@ if (a11yFiles.length === 0) {
 }
 
 const allViolations = [];
-const violationById  = {};
+const violationById = {};
 const violationByImpact = {};
 
 for (const file of a11yFiles) {
   let violations;
-  try { violations = JSON.parse(fs.readFileSync(file, "utf-8")); }
-  catch { console.warn(`Skipping unreadable file: ${file}`); continue; }
+  try {
+    violations = JSON.parse(fs.readFileSync(file, "utf-8"));
+  } catch {
+    console.warn(`Skipping unreadable file: ${file}`);
+    continue;
+  }
 
   const scenarioName = path.basename(file, ".json").replace(/^a11y-\d+-/, "");
 
@@ -35,7 +40,13 @@ for (const file of a11yFiles) {
 
     // Aggregate by violation ID
     if (!violationById[v.id]) {
-      violationById[v.id] = { id: v.id, impact: v.impact, description: v.description, totalNodes: 0, scenarios: [] };
+      violationById[v.id] = {
+        id: v.id,
+        impact: v.impact,
+        description: v.description,
+        totalNodes: 0,
+        scenarios: [],
+      };
     }
     violationById[v.id].totalNodes += v.nodes;
     violationById[v.id].scenarios.push(scenarioName);

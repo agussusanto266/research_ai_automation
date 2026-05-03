@@ -10,4 +10,9 @@ export class BasePage {
     this.page = page;
     this.resolver = new SelfHealingLocatorResolver(page, scenarioLogs, locatorUsages);
   }
+
+  // Standardised navigation — subclasses override to add URL-specific wait conditions.
+  async goto(url: string): Promise<void> {
+    await this.page.goto(url, { waitUntil: "domcontentloaded" });
+  }
 }

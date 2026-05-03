@@ -23,26 +23,26 @@ Login URL     : https://www.saucedemo.com  (login is on the home page)
 
 ### Test Accounts
 
-| Role | Username | Password | Notes |
-|---|---|---|---|
-| standard | standard_user | secret_sauce | Happy path — use for all positive tests |
-| locked | locked_out_user | secret_sauce | Locked — use for negative login cases |
-| problem | problem_user | secret_sauce | Valid but buggy UI — use for visual edge cases only |
-| glitch | performance_glitch_user | secret_sauce | Valid but slow responses — avoid for timing-sensitive tests |
+| Role     | Username                | Password     | Notes                                                       |
+| -------- | ----------------------- | ------------ | ----------------------------------------------------------- |
+| standard | standard_user           | secret_sauce | Happy path — use for all positive tests                     |
+| locked   | locked_out_user         | secret_sauce | Locked — use for negative login cases                       |
+| problem  | problem_user            | secret_sauce | Valid but buggy UI — use for visual edge cases only         |
+| glitch   | performance_glitch_user | secret_sauce | Valid but slow responses — avoid for timing-sensitive tests |
 
 ---
 
 ## Pages / Modules
 
-| Page name | URL path | Notes |
-|---|---|---|
-| Login | `/` | Username + password login form |
-| Inventory | `/inventory.html` | Product list with sort and filter |
-| Product Detail | `/inventory-item.html?id=[n]` | Product detail, add to cart |
-| Cart | `/cart.html` | Review items before checkout |
-| Checkout Step 1 | `/checkout-step-one.html` | Enter buyer information |
-| Checkout Step 2 | `/checkout-step-two.html` | Review order + total |
-| Checkout Complete | `/checkout-complete.html` | Order success confirmation |
+| Page name         | URL path                      | Notes                             |
+| ----------------- | ----------------------------- | --------------------------------- |
+| Login             | `/`                           | Username + password login form    |
+| Inventory         | `/inventory.html`             | Product list with sort and filter |
+| Product Detail    | `/inventory-item.html?id=[n]` | Product detail, add to cart       |
+| Cart              | `/cart.html`                  | Review items before checkout      |
+| Checkout Step 1   | `/checkout-step-one.html`     | Enter buyer information           |
+| Checkout Step 2   | `/checkout-step-two.html`     | Review order + total              |
+| Checkout Complete | `/checkout-complete.html`     | Order success confirmation        |
 
 ---
 
@@ -58,21 +58,21 @@ Login URL     : https://www.saucedemo.com  (login is on the home page)
 
 ## Existing Automation Coverage
 
-| Feature | Feature file | Step definitions | POM |
-|---|---|---|---|
-| Healthcheck | `features/saucedemo/healthcheck.feature` | `step-definitions/saucedemo/healthcheck.steps.ts` | — |
-| Login | `features/saucedemo/login.feature` | `step-definitions/saucedemo/login.steps.ts` | `pages/LoginPage.ts` |
-| Inventory | `features/saucedemo/inventory.feature` | `step-definitions/saucedemo/inventory.steps.ts` | `pages/InventoryPage.ts` |
-| Cart | `features/saucedemo/cart.feature` | `step-definitions/saucedemo/cart.steps.ts` | `pages/CartPage.ts` |
-| Checkout Step 1 | `features/saucedemo/checkout-step1.feature` | `step-definitions/saucedemo/checkout.steps.ts` | `pages/CheckoutPage.ts` |
-| Checkout Step 2 | `features/saucedemo/checkout-step2.feature` | `step-definitions/saucedemo/checkout.steps.ts` | `pages/CheckoutPage.ts` |
+| Feature           | Feature file                                   | Step definitions                                        | POM                             |
+| ----------------- | ---------------------------------------------- | ------------------------------------------------------- | ------------------------------- |
+| Healthcheck       | `features/saucedemo/healthcheck.feature`       | `step-definitions/saucedemo/healthcheck.steps.ts`       | —                               |
+| Login             | `features/saucedemo/login.feature`             | `step-definitions/saucedemo/login.steps.ts`             | `pages/LoginPage.ts`            |
+| Inventory         | `features/saucedemo/inventory.feature`         | `step-definitions/saucedemo/inventory.steps.ts`         | `pages/InventoryPage.ts`        |
+| Cart              | `features/saucedemo/cart.feature`              | `step-definitions/saucedemo/cart.steps.ts`              | `pages/CartPage.ts`             |
+| Checkout Step 1   | `features/saucedemo/checkout-step1.feature`    | `step-definitions/saucedemo/checkout.steps.ts`          | `pages/CheckoutPage.ts`         |
+| Checkout Step 2   | `features/saucedemo/checkout-step2.feature`    | `step-definitions/saucedemo/checkout.steps.ts`          | `pages/CheckoutPage.ts`         |
 | Checkout Complete | `features/saucedemo/checkout-complete.feature` | `step-definitions/saucedemo/checkout-complete.steps.ts` | `pages/CheckoutCompletePage.ts` |
-| Product Detail | `features/saucedemo/product-detail.feature` | `step-definitions/saucedemo/product-detail.steps.ts` | `pages/ProductDetailPage.ts` |
+| Product Detail    | `features/saucedemo/product-detail.feature`    | `step-definitions/saucedemo/product-detail.steps.ts`    | `pages/ProductDetailPage.ts`    |
 
 ---
 
 ## Changelog
 
-| Date | Change |
-|---|---|
+| Date       | Change                                   |
+| ---------- | ---------------------------------------- |
 | 2026-04-26 | Initial config — migrated from CLAUDE.md |

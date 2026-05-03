@@ -19,11 +19,11 @@ export default defineConfig({
     headless: process.env.HEADLESS === "true",
     baseURL: process.env.BASE_URL ?? "https://www.saucedemo.com/",
     screenshot: "only-on-failure",
-    video: "off"
+    video: "off",
   },
   reporter: [
     ["html", { outputFolder: "reports/html", open: "never" }],
-    ["json", { outputFile: "reports/results.json" }]
+    ["json", { outputFile: "reports/results.json" }],
   ],
-  workers: 1
+  workers: 1,
 });

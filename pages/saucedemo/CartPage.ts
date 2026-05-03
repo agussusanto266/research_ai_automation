@@ -1,28 +1,28 @@
 import type { Page } from "playwright";
-import { BasePage } from "./BasePage";
-import type { LocatorCandidate, LocatorUsage } from "../utils/selfHealingLocator";
+import { BasePage } from "../BasePage";
+import type { LocatorCandidate, LocatorUsage } from "../../utils/selfHealingLocator";
 
 const CART_TITLE_CANDIDATES: LocatorCandidate[] = [
   { name: "primary-testid", kind: "testId", value: "title" },
   { name: "secondary-role", kind: "role", role: "heading", options: { name: "Your Cart" } },
-  { name: "fallback-css", kind: "css", value: ".title" }
+  { name: "fallback-css", kind: "css", value: ".title" },
 ];
 
 const CART_BADGE_CANDIDATES: LocatorCandidate[] = [
   { name: "primary-testid", kind: "testId", value: "shopping-cart-badge" },
-  { name: "fallback-css", kind: "css", value: ".shopping_cart_badge" }
+  { name: "fallback-css", kind: "css", value: ".shopping_cart_badge" },
 ];
 
 const CONTINUE_SHOPPING_CANDIDATES: LocatorCandidate[] = [
   { name: "primary-testid", kind: "testId", value: "continue-shopping" },
   { name: "secondary-role", kind: "role", role: "button", options: { name: "Continue Shopping" } },
-  { name: "fallback-css", kind: "css", value: "[data-test='continue-shopping']" }
+  { name: "fallback-css", kind: "css", value: "[data-test='continue-shopping']" },
 ];
 
 const CHECKOUT_BUTTON_CANDIDATES: LocatorCandidate[] = [
   { name: "primary-testid", kind: "testId", value: "checkout" },
   { name: "secondary-role", kind: "role", role: "button", options: { name: "Checkout" } },
-  { name: "fallback-css", kind: "css", value: "[data-test='checkout']" }
+  { name: "fallback-css", kind: "css", value: "[data-test='checkout']" },
 ];
 
 const CART_ITEM_CSS = ".cart_item";
@@ -34,7 +34,7 @@ export class CartPage extends BasePage {
     super(page, scenarioLogs, locatorUsages);
   }
 
-  async goto(baseUrl: string): Promise<void> {
+  override async goto(baseUrl: string): Promise<void> {
     const cartLink = this.page.locator('[data-test="shopping-cart-link"]');
     if (await cartLink.isVisible()) {
       await cartLink.click();
@@ -51,7 +51,7 @@ export class CartPage extends BasePage {
   }
 
   async getItemCount(): Promise<number> {
-    return this.page.locator('.cart_item').count();
+    return this.page.locator(".cart_item").count();
   }
 
   async isCartEmpty(): Promise<boolean> {

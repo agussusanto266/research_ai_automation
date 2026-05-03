@@ -1,0 +1,9 @@
+node_modules/
+dist/
+reports/
+allure-results/
+allure-report/
+visual-baselines/
+output/
+input/
+*.json

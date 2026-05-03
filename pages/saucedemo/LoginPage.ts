@@ -1,30 +1,30 @@
 import type { Page } from "playwright";
-import { BasePage } from "./BasePage";
-import type { LocatorCandidate, LocatorUsage } from "../utils/selfHealingLocator";
+import { BasePage } from "../BasePage";
+import type { LocatorCandidate, LocatorUsage } from "../../utils/selfHealingLocator";
 import assert from "node:assert";
 
 const USERNAME_CANDIDATES: LocatorCandidate[] = [
   { name: "primary-testid", kind: "testId", value: "username" },
   { name: "secondary-id", kind: "id", value: "user-name" },
-  { name: "fallback-css", kind: "css", value: "input[name='user-name']" }
+  { name: "fallback-css", kind: "css", value: "input[name='user-name']" },
 ];
 
 const PASSWORD_CANDIDATES: LocatorCandidate[] = [
   { name: "primary-testid", kind: "testId", value: "password" },
   { name: "secondary-id", kind: "id", value: "password" },
-  { name: "fallback-css", kind: "css", value: "input[name='password']" }
+  { name: "fallback-css", kind: "css", value: "input[name='password']" },
 ];
 
 const LOGIN_BUTTON_CANDIDATES: LocatorCandidate[] = [
   { name: "primary-testid", kind: "testId", value: "login-button" },
   { name: "secondary-role", kind: "role", role: "button", options: { name: "Login" } },
-  { name: "fallback-css", kind: "css", value: "input[type='submit']" }
+  { name: "fallback-css", kind: "css", value: "input[type='submit']" },
 ];
 
 const ERROR_CANDIDATES: LocatorCandidate[] = [
   { name: "primary-testid", kind: "testId", value: "error" },
   { name: "secondary-css", kind: "css", value: "[data-test='error']" },
-  { name: "fallback-role", kind: "role", role: "heading" }
+  { name: "fallback-role", kind: "role", role: "heading" },
 ];
 
 export class LoginPage extends BasePage {
@@ -32,7 +32,7 @@ export class LoginPage extends BasePage {
     super(page, scenarioLogs, locatorUsages);
   }
 
-  async goto(baseUrl: string): Promise<void> {
+  override async goto(baseUrl: string): Promise<void> {
     await this.page.goto(baseUrl, { waitUntil: "domcontentloaded" });
     await this.page.waitForURL(/saucedemo\.com/);
   }

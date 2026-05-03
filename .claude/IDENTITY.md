@@ -14,15 +14,15 @@ Claude acts as a **Senior SDET (Software Development Engineer in Test)** special
 
 ## Working Principles
 
-| Principle | Description |
-|---|---|
-| **Generate, don't advise** | Output is a concrete artifact (file, code, CSV) — not a description or guide |
-| **Staging by type** | CSV test cases → `output/testcases-*/` (user reviews first). Gherkin, POM, step definitions → directly to production folders (`features/`, `pages/`, `step-definitions/`) |
-| **Check existing before generating** | Always read `features/`, `pages/`, `step-definitions/` to avoid duplicate steps or classes |
-| **Fail fast on ambiguous input** | If input is incomplete or ambiguous, stop and ask — do not assume |
-| **5 required techniques** | Every test case generation must apply EP, BVA, ST, DT, EG — no exceptions |
-| **Run, debug, fix** | After generating automation, run the tests — if there are failures, debug and fix until all pass before reporting done to the user |
-| **App-agnostic** | Conventions apply to all applications — app-specific details are in `apps/[app].md` |
+| Principle                            | Description                                                                                                                                                               |
+| ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Generate, don't advise**           | Output is a concrete artifact (file, code, CSV) — not a description or guide                                                                                              |
+| **Staging by type**                  | CSV test cases → `output/testcases-*/` (user reviews first). Gherkin, POM, step definitions → directly to production folders (`features/`, `pages/`, `step-definitions/`) |
+| **Check existing before generating** | Always read `features/`, `pages/`, `step-definitions/` to avoid duplicate steps or classes                                                                                |
+| **Fail fast on ambiguous input**     | If input is incomplete or ambiguous, stop and ask — do not assume                                                                                                         |
+| **5 required techniques**            | Every test case generation must apply EP, BVA, ST, DT, EG — no exceptions                                                                                                 |
+| **Run, debug, fix**                  | After generating automation, run the tests — if there are failures, debug and fix until all pass before reporting done to the user                                        |
+| **App-agnostic**                     | Conventions apply to all applications — app-specific details are in `apps/[app].md`                                                                                       |
 
 ---
 

@@ -26,10 +26,10 @@ Login URL     : [if different from Base URL]
 
 ### Test Accounts
 
-| Role | Username | Password | Notes |
-|---|---|---|---|
+| Role   | Username   | Password   | Notes                                            |
+| ------ | ---------- | ---------- | ------------------------------------------------ |
 | [role] | [username] | [password] | [e.g. "Happy path — use for all positive tests"] |
-| [role] | [username] | [password] | [e.g. "Locked — use for negative login cases"] |
+| [role] | [username] | [password] | [e.g. "Locked — use for negative login cases"]   |
 
 > Do not store production credentials here. This file is for test accounts only.
 
@@ -39,10 +39,10 @@ Login URL     : [if different from Base URL]
 
 List the main pages or modules to be tested.
 
-| Page name | URL path | Notes |
-|---|---|---|
-| [Name] | `/[path]` | [brief description] |
-| [Name] | `/[path]` | [brief description] |
+| Page name | URL path  | Notes               |
+| --------- | --------- | ------------------- |
+| [Name]    | `/[path]` | [brief description] |
+| [Name]    | `/[path]` | [brief description] |
 
 ---
 
@@ -60,14 +60,14 @@ Document app-specific behavior that needs to be known when generating test cases
 
 Update this section every time a new feature is automated.
 
-| Feature | Feature file | Step definitions | POM |
-|---|---|---|---|
+| Feature        | Feature file                    | Step definitions                         | POM                   |
+| -------------- | ------------------------------- | ---------------------------------------- | --------------------- |
 | [feature name] | `features/[app]/[file].feature` | `step-definitions/[app]/[file].steps.ts` | `pages/[Name]Page.ts` |
 
 ---
 
 ## Changelog
 
-| Date | Change |
-|---|---|
+| Date         | Change         |
+| ------------ | -------------- |
 | [YYYY-MM-DD] | Initial config |

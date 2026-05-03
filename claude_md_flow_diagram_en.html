@@ -205,20 +205,34 @@
     <div class="t2">Check existing files first — no duplicate steps</div>
     <div class="arts">
       <div class="art">*.feature<br>Gherkin</div>
-      <div class="art">*Page.ts<br>POM</div>
+      <div class="art">pages/[app]/<br>*Page.ts</div>
       <div class="art">*.steps.ts<br>Step defs</div>
       <div class="art">package.json<br>runner script</div>
     </div>
+    <div class="t2" style="margin-top:6px">POM uses <code style="font-size:10px">getPage(PageClass)</code> factory — lazy-init, cached per scenario</div>
   </div>
   <div class="arr">↓</div>
 
   <div class="box bw" onclick="sendPrompt('Explain the Post-Generation Validation loop: how does Claude run, debug, and fix failing tests after generating automation?')">
     <div class="t1">Post-Generation Validation</div>
-    <div class="t2">Run → evaluate → debug → fix → re-run (max 3 iterations per failure)</div>
+    <div class="t2">typecheck → lint → run → evaluate → debug → fix → re-run (max 3 per failure)</div>
     <div class="bgs">
       <span class="badge b7">all pass → report done</span>
       <span class="badge b5">failure → debug &amp; fix</span>
     </div>
+  </div>
+  <div class="arr">↓</div>
+
+  <div class="box bg" onclick="sendPrompt('Describe the full CI/CD pipeline: lint, smoke, regression, docker, and cross-browser jobs and how they depend on each other')">
+    <div class="t1">CI / CD — GitHub Actions (5 jobs)</div>
+    <div class="arts" style="margin-top:6px">
+      <div class="art" style="background:#E1F5EE;border-color:#0F6E56">lint<br>ESLint<br>Prettier<br>tsc</div>
+      <div class="art" style="background:#E6F1FB;border-color:#185FA5">smoke<br>Chromium<br>@smoke</div>
+      <div class="art" style="background:#FAEEDA;border-color:#854F0B">regression<br>Chromium<br>@regression</div>
+      <div class="art" style="background:#EEEDFE;border-color:#534AB7">docker<br>sanity</div>
+      <div class="art" style="background:#EAF3DE;border-color:#3B6D11">x-browser<br>Firefox<br>WebKit</div>
+    </div>
+    <div class="t2" style="margin-top:4px">lint → smoke → [regression | docker | firefox | webkit] in parallel</div>
   </div>
   <div class="arr">↓</div>
 
@@ -264,5 +278,20 @@
     <div class="li"><span class="badge b3" style="margin:0">ST</span>State Transition</div>
     <div class="li"><span class="badge b4" style="margin:0">DT</span>Decision Table</div>
     <div class="li"><span class="badge b5" style="margin:0">EG</span>Error Guessing</div>
+  </div>
+
+  <div class="leg" style="margin-top:8px">
+    <div class="t1" style="font-size:11px;margin-bottom:4px">Framework tech stack (final state)</div>
+    <div class="li"><span class="badge b3" style="margin:0">POM</span>pages/[app]/*Page.ts — namespaced, self-healing locators</div>
+    <div class="li"><span class="badge b4" style="margin:0">Factory</span>CustomWorld.getPage(PageClass) — lazy-init, cached per scenario</div>
+    <div class="li"><span class="badge b1" style="margin:0">Lint</span>ESLint (flat config) + Prettier — enforced in CI lint job</div>
+    <div class="li"><span class="badge b7" style="margin:0">Tests</span>17 unit tests: selfHealingLocator · visual · dataGenerator</div>
+    <div class="li"><span class="badge b2" style="margin:0">CODEOWNERS</span>.github/CODEOWNERS — area-based review enforcement</div>
+    <div class="li"><span class="badge b5" style="margin:0">Retry</span>retry:1 (skip @no-retry) · allowedDiffPercent=0.5% visual</div>
+    <div style="margin-top:6px;display:flex;align-items:center;gap:6px">
+      <div style="font-size:11px;font-weight:600;color:var(--color-text-primary)">Repo maturity score:</div>
+      <span class="badge b7" style="font-size:12px;padding:2px 10px">87 / 100</span>
+      <div style="font-size:10px;color:var(--color-text-secondary)">up from 62 · production-ready</div>
+    </div>
   </div>
 </div>

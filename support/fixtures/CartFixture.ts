@@ -1,6 +1,6 @@
 import type { Page } from "playwright";
 import type { LocatorUsage } from "../../utils/selfHealingLocator";
-import { InventoryPage } from "../../pages/InventoryPage";
+import { InventoryPage } from "../../pages/saucedemo/InventoryPage";
 import { env } from "../../config/env";
 
 /**

@@ -1,22 +1,27 @@
 import type { Page } from "playwright";
-import { BasePage } from "./BasePage";
-import type { LocatorCandidate, LocatorUsage } from "../utils/selfHealingLocator";
+import { BasePage } from "../BasePage";
+import type { LocatorCandidate, LocatorUsage } from "../../utils/selfHealingLocator";
 
 const NEW_TODO_CANDIDATES: LocatorCandidate[] = [
-  { name: "primary-css",    kind: "css",   value: ".new-todo" },
-  { name: "secondary-role", kind: "role",  role: "textbox", options: { name: /new todo|what needs/i } },
-  { name: "fallback-xpath", kind: "xpath", value: "//input[contains(@class,'new-todo')]" }
+  { name: "primary-css", kind: "css", value: ".new-todo" },
+  {
+    name: "secondary-role",
+    kind: "role",
+    role: "textbox",
+    options: { name: /new todo|what needs/i },
+  },
+  { name: "fallback-xpath", kind: "xpath", value: "//input[contains(@class,'new-todo')]" },
 ];
 
 const FOOTER_COUNT_CANDIDATES: LocatorCandidate[] = [
-  { name: "primary-css",    kind: "css",   value: ".todo-count" },
-  { name: "fallback-xpath", kind: "xpath", value: "//*[contains(@class,'todo-count')]" }
+  { name: "primary-css", kind: "css", value: ".todo-count" },
+  { name: "fallback-xpath", kind: "xpath", value: "//*[contains(@class,'todo-count')]" },
 ];
 
 const CLEAR_COMPLETED_CANDIDATES: LocatorCandidate[] = [
-  { name: "primary-css",    kind: "css",   value: ".clear-completed" },
-  { name: "secondary-role", kind: "role",  role: "button", options: { name: /clear completed/i } },
-  { name: "fallback-xpath", kind: "xpath", value: "//button[contains(@class,'clear-completed')]" }
+  { name: "primary-css", kind: "css", value: ".clear-completed" },
+  { name: "secondary-role", kind: "role", role: "button", options: { name: /clear completed/i } },
+  { name: "fallback-xpath", kind: "xpath", value: "//button[contains(@class,'clear-completed')]" },
 ];
 
 export class TodoPage extends BasePage {
@@ -24,13 +29,13 @@ export class TodoPage extends BasePage {
     super(page, scenarioLogs, locatorUsages);
   }
 
-  async goto(baseUrl: string): Promise<void> {
+  override async goto(baseUrl: string): Promise<void> {
     await this.page.goto(baseUrl, { waitUntil: "domcontentloaded" });
     await this.page.locator(".new-todo").waitFor({ state: "visible" });
   }
 
   async addTodo(text: string): Promise<void> {
-    const input = this.page.locator(".new-todo");
+    const input = await this.resolver.resolve("newTodo", NEW_TODO_CANDIDATES);
     await input.click();
     // pressSequentially fires real keydown/keypress/keyup events (unlike keyboard.type
     // which uses CDP insertText). The 80ms delay after each character gives React 18

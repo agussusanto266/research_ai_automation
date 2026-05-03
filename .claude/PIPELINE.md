@@ -39,6 +39,7 @@ research_ai_automation/
 ```
 
 **Example for SauceDemo:**
+
 ```
 features/saucedemo/login.feature
 features/saucedemo/cart.feature
@@ -68,6 +69,7 @@ Input (Path A / B / C)
 ```
 
 **Rules:**
+
 - CSV test cases stay staged to `output/` — user reviews before generating automation
 - Gherkin, POM, and step definitions are generated directly to the per-app production folder
 - File naming convention: `[feature].feature`, `[PageName]Page.ts`, `[feature].steps.ts`
@@ -118,13 +120,13 @@ below threshold)                step-definitions/[app]/           pages/
 
 A PRD is considered **APPROVED** only if it meets all of the following thresholds:
 
-| Framework | Minimum threshold |
-|---|---|
-| SMART | Min 4 of 5 criteria met per requirement |
-| INVEST | Min 4 of 7 criteria met per user story |
-| MoSCoW | All Must Have items covered with clear acceptance criteria |
-| RBT | No High likelihood × High impact items without mitigation |
-| BVA/EP | All input fields have defined boundary values |
+| Framework | Minimum threshold                                          |
+| --------- | ---------------------------------------------------------- |
+| SMART     | Min 4 of 5 criteria met per requirement                    |
+| INVEST    | Min 4 of 7 criteria met per user story                     |
+| MoSCoW    | All Must Have items covered with clear acceptance criteria |
+| RBT       | No High likelihood × High impact items without mitigation  |
+| BVA/EP    | All input fields have defined boundary values              |
 
 If **threshold is not met** → verdict **NEEDS REVISION** → generate file to `output/feedback/`.
 
@@ -159,6 +161,7 @@ Please revise the PRD and re-run Mode 1.
 **Trigger:** `"Mode 1 Path A: Analyze the following PRD"` or `"Mode 1 Path A: Analyze PRD at input/prd/[filename]"`
 
 **Steps:**
+
 1. Read PRD from file or chat
 2. Score per framework (SMART, INVEST, MoSCoW, RBT, BVA/EP)
 3. Verdict: **APPROVED** → continue to Mode 2 | **NEEDS REVISION** → generate `output/feedback/[feature]_prd_[YYYY-MM-DD].txt`
@@ -172,6 +175,7 @@ Please revise the PRD and re-run Mode 1.
 **Output:** `output/testcases-from-prd/[feature]_[YYYY-MM-DD].csv`
 
 **5 required techniques:**
+
 1. **EP** — divide each input/state into valid and invalid equivalence classes
 2. **BVA** — test at boundary values of each EP class (min, min+1, max-1, max)
 3. **ST** — identify all UI states and test every transition
@@ -185,6 +189,7 @@ Please revise the PRD and re-run Mode 1.
 **Trigger:** `"Mode 2+3 Path B: Explore [feature name] at [URL] then generate all artifacts"`
 
 **Ordered steps:**
+
 1. Read existing files — `pages/`, `step-definitions/[app]/`, `features/[app]/`
 2. Explore web app — navigate to target page, identify elements and flow
 3. Inspect DOM — find `data-test`, `id`, `role` per element
@@ -203,6 +208,7 @@ Please revise the PRD and re-run Mode 1.
 **Trigger:** `"Mode 3C Path C: Generate automation from input/testcases/[filename].csv"`
 
 **Ordered steps:**
+
 1. Read file `input/testcases/[filename].csv`
 2. Read existing files — `pages/`, `step-definitions/[app]/`, `features/[app]/`
 3. Map test cases → Gherkin Scenario Outline
@@ -214,6 +220,7 @@ Please revise the PRD and re-run Mode 1.
 9. **Run Post-Generation Validation** — see section below
 
 **Rules:**
+
 - Do not generate a new CSV — test cases already exist in input
 - Gherkin must reflect the original test cases — do not add or remove coverage
 - If any CSV step is ambiguous → ask the user before generating
@@ -226,6 +233,7 @@ Please revise the PRD and re-run Mode 1.
 **Trigger:** Always paired with Mode 2 or 2B — not run standalone.
 
 **Output (in order):**
+
 1. `features/[app]/[feature].feature`
 2. `pages/[PageName]Page.ts`
 3. `step-definitions/[app]/[feature].steps.ts`
@@ -233,6 +241,7 @@ Please revise the PRD and re-run Mode 1.
 5. **Run Post-Generation Validation** — see section below
 
 **Rules:**
+
 - Check `features/[app]/` and `step-definitions/[app]/` — do not duplicate already-defined steps
 - Follow `BasePage.ts` for the self-healing pattern
 - Use `CustomWorld` from `support/CustomWorld.ts` — add a new Page property if a new class is created
@@ -253,6 +262,7 @@ Please revise the PRD and re-run Mode 1.
 > Pipeline is **not declared complete** until all tests pass.
 
 **Steps:**
+
 1. Run tests for the newly generated feature:
    ```bash
    npx cucumber-js --tags "@[feature]" --format progress
@@ -276,6 +286,7 @@ Please revise the PRD and re-run Mode 1.
    - Command to open the report: `npm run test:[feature]`
 
 **Debug rules:**
+
 - Do not change the expected test outcome to avoid a failure — fix the implementation, not the assertion
 - If a locator is not found → update `LocatorCandidate[]` in the POM, do not hardcode a selector in the step definition
 - If a step is undefined → add the step definition, do not modify the Gherkin text
@@ -291,6 +302,7 @@ Folder,Name,Preconditions,Step,Test Data,Expected Result,Priority,Type,Automatab
 ```
 
 **Rules:**
+
 - One test case = multiple rows (Testmo multi-step format)
 - Test case names reflect the technique: `"EP - valid username"`, `"BVA - max cart items"`
 - Always cover: EP valid, EP invalid, BVA min, BVA max, state transition, error guessing
@@ -303,12 +315,14 @@ Folder,Name,Preconditions,Step,Test Data,Expected Result,Priority,Type,Automatab
 ## Full Instruction Examples
 
 ### Path A
+
 ```
 Mode 1 Path A: Analyze PRD at input/prd/login_prd.txt
 If APPROVED, continue with Mode 2 + Mode 3 for the "login" feature
 ```
 
 ### Path B
+
 ```
 Mode 2+3 Path B: Explore the cart page at https://[url]/cart
 Feature: "shopping-cart"
@@ -316,6 +330,7 @@ Generate CSV + Gherkin + POM + steps
 ```
 
 ### Path C
+
 ```
 Mode 3C Path C: Generate automation from input/testcases/checkout_manual.csv
 Target URL: https://[url]/checkout

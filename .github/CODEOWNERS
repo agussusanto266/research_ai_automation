@@ -1,0 +1,31 @@
+# CODEOWNERS — maps test feature areas to responsible engineers.
+# Format: <pattern> <@github-username or @org/team>
+# Adjust usernames/teams to match your GitHub org structure.
+
+# Framework core — changes require QA Lead review
+/pages/BasePage.ts                      @agusssusanto266
+/support/CustomWorld.ts                 @agusssusanto266
+/support/hooks.ts                       @agusssusanto266
+/utils/selfHealingLocator.ts            @agusssusanto266
+/config/env.ts                          @agusssusanto266
+/cucumber.js                            @agusssusanto266
+/.claude/                               @agusssusanto266
+
+# SauceDemo feature area
+/features/saucedemo/                    @agusssusanto266
+/step-definitions/saucedemo/            @agusssusanto266
+/pages/saucedemo/                       @agusssusanto266
+
+# OrangeHRM feature area
+/features/orangehrm/                    @agusssusanto266
+/step-definitions/orangehrm/            @agusssusanto266
+/pages/orangehrm/                       @agusssusanto266
+
+# TodoMVC feature area
+/features/todomvc/                      @agusssusanto266
+/step-definitions/todomvc/              @agusssusanto266
+/pages/todomvc/                         @agusssusanto266
+
+# CI / DevOps
+/.github/                               @agusssusanto266
+/Dockerfile                             @agusssusanto266

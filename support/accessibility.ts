@@ -9,9 +9,7 @@ export type A11yViolation = {
 };
 
 export async function checkAccessibility(page: Page): Promise<A11yViolation[]> {
-  const results = await new AxeBuilder({ page })
-    .withTags(["wcag2a", "wcag2aa"])
-    .analyze();
+  const results = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa"]).analyze();
 
   return results.violations.map((v) => ({
     id: v.id,

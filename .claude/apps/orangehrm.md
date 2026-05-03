@@ -23,21 +23,21 @@ Login URL     : https://opensource-demo.orangehrmlive.com/web/index.php/auth/log
 
 ### Test Accounts
 
-| Role  | Username | Password | Notes                                              |
-|-------|----------|----------|----------------------------------------------------|
-| admin | Admin    | admin123 | Full access — use for all positive tests           |
+| Role  | Username | Password | Notes                                    |
+| ----- | -------- | -------- | ---------------------------------------- |
+| admin | Admin    | admin123 | Full access — use for all positive tests |
 
 ---
 
 ## Pages / Modules
 
-| Page name        | URL path                                      | Notes                                    |
-|------------------|-----------------------------------------------|------------------------------------------|
-| Login            | `/web/index.php/auth/login`                   | Username + password form                 |
-| Dashboard        | `/web/index.php/dashboard/index`              | Landing page after successful login      |
-| Forgot Password  | `/web/index.php/auth/requestPasswordResetCode`| Password reset request form              |
-| My Info          | `/web/index.php/pim/viewPersonalDetails/empNumber/...` | Personal info module            |
-| Admin            | `/web/index.php/admin/viewSystemUsers`        | Admin module — requires admin role       |
+| Page name       | URL path                                               | Notes                               |
+| --------------- | ------------------------------------------------------ | ----------------------------------- |
+| Login           | `/web/index.php/auth/login`                            | Username + password form            |
+| Dashboard       | `/web/index.php/dashboard/index`                       | Landing page after successful login |
+| Forgot Password | `/web/index.php/auth/requestPasswordResetCode`         | Password reset request form         |
+| My Info         | `/web/index.php/pim/viewPersonalDetails/empNumber/...` | Personal info module                |
+| Admin           | `/web/index.php/admin/viewSystemUsers`                 | Admin module — requires admin role  |
 
 ---
 
@@ -55,14 +55,14 @@ Login URL     : https://opensource-demo.orangehrmlive.com/web/index.php/auth/log
 
 ## Existing Automation Coverage
 
-| Feature | Feature file                          | Step definitions                                    | POM                          |
-|---------|---------------------------------------|-----------------------------------------------------|------------------------------|
-| Login   | `features/orangehrm/login.feature`   | `step-definitions/orangehrm/login.steps.ts`         | `pages/OrangeHRMLoginPage.ts`|
+| Feature | Feature file                       | Step definitions                            | POM                           |
+| ------- | ---------------------------------- | ------------------------------------------- | ----------------------------- |
+| Login   | `features/orangehrm/login.feature` | `step-definitions/orangehrm/login.steps.ts` | `pages/OrangeHRMLoginPage.ts` |
 
 ---
 
 ## Changelog
 
-| Date       | Change          |
-|------------|-----------------|
-| 2026-05-01 | Initial config  |
+| Date       | Change         |
+| ---------- | -------------- |
+| 2026-05-01 | Initial config |

@@ -1,7 +1,7 @@
 // Merges per-PID locator-history-<pid>.json files produced by parallel workers
 // into a single reports/locator-history.json with heal-event summary.
 // Run after every test execution: npm run merge:locator-history
-const fs   = require("fs");
+const fs = require("fs");
 const path = require("path");
 
 const reportsDir = path.resolve(__dirname, "..", "reports");
@@ -11,7 +11,8 @@ if (!fs.existsSync(reportsDir)) {
   process.exit(0);
 }
 
-const pidFiles = fs.readdirSync(reportsDir)
+const pidFiles = fs
+  .readdirSync(reportsDir)
   .filter((f) => /^locator-history-\d+\.json$/.test(f))
   .map((f) => path.join(reportsDir, f));
 
@@ -23,8 +24,12 @@ if (pidFiles.length === 0) {
 const merged = {};
 for (const file of pidFiles) {
   let data;
-  try { data = JSON.parse(fs.readFileSync(file, "utf-8")); }
-  catch { console.warn(`Skipping unreadable file: ${file}`); continue; }
+  try {
+    data = JSON.parse(fs.readFileSync(file, "utf-8"));
+  } catch {
+    console.warn(`Skipping unreadable file: ${file}`);
+    continue;
+  }
 
   for (const [element, usages] of Object.entries(data)) {
     merged[element] = [...(merged[element] ?? []), ...usages];
@@ -70,7 +75,9 @@ console.log(`Merged ${pidFiles.length} PID file(s) → ${outputPath}`);
 if (healEvents.length > 0) {
   console.log(`Heal events detected (${healEvents.length}):`);
   healEvents.forEach((e) =>
-    console.log(`  ${e.element}: ${e.healCount} non-primary use(s), last="${e.lastFallback}" at ${e.lastAt}`)
+    console.log(
+      `  ${e.element}: ${e.healCount} non-primary use(s), last="${e.lastFallback}" at ${e.lastAt}`
+    )
   );
 } else {
   console.log("No heal events — all elements resolved with primary candidates.");

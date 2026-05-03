@@ -13,8 +13,8 @@ const shared = {
   requireModule: ["ts-node/register"],
   require: ["step-definitions/**/*.ts", "support/**/*.ts"],
   // publishQuiet: true,
-  // retry: 1,
-  // retryTagFilter: "not @no-retry",
+  retry: 1,
+  retryTagFilter: "not @no-retry",
   timeout: 30000,
   exit: true,
 };
@@ -36,11 +36,13 @@ module.exports = {
 
   firefox: {
     ...shared,
-    format: [
-      "summary",
-      "html:reports/firefox-report.html",
-      "json:reports/firefox-report.json",
-    ],
+    format: ["summary", "html:reports/firefox-report.html", "json:reports/firefox-report.json"],
+    tags: "@smoke",
+  },
+
+  webkit: {
+    ...shared,
+    format: ["summary", "html:reports/webkit-report.html", "json:reports/webkit-report.json"],
     tags: "@smoke",
   },
 };

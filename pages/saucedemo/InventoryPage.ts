@@ -1,16 +1,16 @@
 import type { Page } from "playwright";
-import { BasePage } from "./BasePage";
-import type { LocatorCandidate, LocatorUsage } from "../utils/selfHealingLocator";
+import { BasePage } from "../BasePage";
+import type { LocatorCandidate, LocatorUsage } from "../../utils/selfHealingLocator";
 
 const SORT_DROPDOWN_CANDIDATES: LocatorCandidate[] = [
   { name: "primary-testid", kind: "testId", value: "product-sort-container" },
-  { name: "fallback-css",   kind: "css",    value: "[data-test='product-sort-container']" }
+  { name: "fallback-css", kind: "css", value: "[data-test='product-sort-container']" },
 ];
 
 const PAGE_TITLE_CANDIDATES: LocatorCandidate[] = [
   { name: "primary-testid", kind: "testId", value: "title" },
-  { name: "secondary-role", kind: "role",   role: "heading", options: { name: "Products" } },
-  { name: "fallback-css",   kind: "css",    value: ".title" }
+  { name: "secondary-role", kind: "role", role: "heading", options: { name: "Products" } },
+  { name: "fallback-css", kind: "css", value: ".title" },
 ];
 
 export type SortOption = "az" | "za" | "lohi" | "hilo";
@@ -20,7 +20,7 @@ export class InventoryPage extends BasePage {
     super(page, scenarioLogs, locatorUsages);
   }
 
-  async goto(baseUrl: string): Promise<void> {
+  override async goto(baseUrl: string): Promise<void> {
     await this.page.goto(`${baseUrl}inventory.html`, { waitUntil: "domcontentloaded" });
     await this.page.waitForURL(/inventory\.html/);
   }
@@ -55,7 +55,8 @@ export class InventoryPage extends BasePage {
   // Use when adding multiple products sequentially; waits for badge to reach expectedCount.
   async addProductToCart(expectedCount: number): Promise<void> {
     await this.page.locator('[data-test^="add-to-cart"]').first().click();
-    await this.page.locator('[data-test="shopping-cart-badge"]')
+    await this.page
+      .locator('[data-test="shopping-cart-badge"]')
       .filter({ hasText: String(expectedCount) })
       .waitFor({ state: "visible" });
   }
